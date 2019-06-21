@@ -114,7 +114,7 @@ rgi_regionsO1 = [13]
 rgi_regionsO2 = 'all'
 # RGI glacier number (RGI V6.0)
 #rgi_glac_number = 'all'
-rgi_glac_number = ['03983']
+rgi_glac_number = ['00001']
 #rgi_glac_number = ['05313']
 #rgi_glac_number = glac_num_fromrange(1,67)
 #rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt2_1000glac_3chain_truncnorm/reg' + 
@@ -135,22 +135,22 @@ startyear = 2000
 #  water year example: 2000 would start on October 1999, since October 1999 - September 2000 is the water year 2000
 #  calendar year example: 2000 would start on January 2000
 # Last year of model run
-endyear = 2018
+endyear = 2017
 # Spin up time [years]
 spinupyears = 0
 # Water year option
 option_wateryear = 3
-#  Option 1 (default) - water year (ex. 2000: Oct 1 1999 - Sept 1 2000)
+#  Option 1 (default) - water year (ex. 2000: Oct 1 1999 - Sept 30 2000)
 #  Option 2 - calendar year
 #  Option 3 - define start/end months and days (BE CAREFUL WHEN CUSTOMIZING USING OPTION 3 - DOUBLE CHECK YOUR DATES)
-constantarea_years = 100
+constantarea_years = 0
 
 # Simulation runs
 #  simulation runs are separate such that calibration runs can be run at same time as simulations
 #gcm_startyear = 1980
 #gcm_endyear = 2017
 gcm_startyear = 2000
-gcm_endyear = 2100
+gcm_endyear = 2017
 gcm_spinupyears = 0
 gcm_wateryear = 1
 
@@ -173,7 +173,7 @@ synthetic_prec_factor = 1.12
 
 #%% ===== CALIBRATION OPTIONS =====
 # Calibration option (1 = minimization, 2 = MCMC, 3=HH2015)
-option_calibration = 2
+option_calibration = 1
 # Calibration datasets
 cal_datasets = ['shean']
 #cal_datasets = ['wgms_d']
@@ -243,7 +243,7 @@ ddfsnow_start=ddfsnow_mu
 #%% SIMULATION OUTPUT
 # Number of model parameter sets for simulation
 #  if 1, the median is used
-sim_iters = 100
+sim_iters = 1
 sim_burn = 200
 # Simulation output filepath
 output_sim_fp = output_filepath + 'simulations/'
@@ -254,7 +254,7 @@ sim_stat_cns = ['mean', 'std']
 
 #%% MODEL PARAMETERS 
 # Option to import calibration parameters for each glacier
-option_import_modelparams = 1
+option_import_modelparams = 0
 #print('\nSWITCH OPTION IMPORT MODEL PARAMS BACK!\n')
 #  Option 1 (default) - calibrated model parameters in netcdf files
 #  Option 0 - use the parameters set by the input

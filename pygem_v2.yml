@@ -2,7 +2,7 @@ name: pygem_v2
 channels:
 - conda-forge
 dependencies:
-- python
+- python=3.5
 - pandas
 - numpy
 - scipy
