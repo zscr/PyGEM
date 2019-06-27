@@ -66,8 +66,8 @@ ax[0,0].set_ylabel('mass balance uncertainty, m w.e. yr^-1', size=12)
     
 # Example Legend
 # Option 1: automatic based on labels
-#ax[0,0].legend(loc=(0.05, 0.05), fontsize=10, labelspacing=0.25, handlelength=1, handletextpad=0.25, borderpad=0, 
-#               frameon=False)
+ax[0,0].legend(loc=(0.05, 0.05), fontsize=10, labelspacing=0.25, handlelength=1, handletextpad=0.25, borderpad=0, 
+               frameon=False)
 # Option 2: manually define legend
 #leg_lines = []
 #labels = ['plot1', 'plot2']
@@ -94,6 +94,7 @@ ytick = 5
 xlabel = 'Longitude [$^\circ$]'
 ylabel = 'Latitude [$^\circ$]'
 labelsize = 12
+
 west = -155
 east = -130
 south = 55
@@ -176,6 +177,7 @@ ax.add_feature(group_feature,zorder=2)
 cmap = 'RdYlBu'
 norm = plt.Normalize(-2, 2)
 var_label = 'mass balance, m w.e. yr^-1'
+
 sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
 sm._A = []
 plt.colorbar(sm, ax=ax, fraction=0.024, pad=0.01)
