@@ -19,6 +19,7 @@ ds = pd.read_csv(os.getcwd() + '/Alaska_dV_17jun_preprocessed.csv')
 mb = ds.loc[:,'mb_mwea']
 #area = ds.loc[:,'area']
 mb_uncertainty = ds.loc[:,'mb_mwea_sigma']
+
 # X,Y values
 x_values = mb  
 y_values = mb_uncertainty
@@ -168,10 +169,10 @@ ax.set_ylabel(ylabel, size=labelsize)
 
 # Add regions
 #  facecolor='none' just plots the lines
-group_shp = cartopy.io.shapereader.Reader(rgiO1_shp_fn)
-group_feature = cartopy.feature.ShapelyFeature(group_shp.geometries(), cartopy.crs.PlateCarree(),
-                                               edgecolor='black', facecolor='grey', alpha=0.2, linewidth=1)
-ax.add_feature(group_feature,zorder=2)
+#group_shp = cartopy.io.shapereader.Reader(rgiO1_shp_fn)
+#group_feature = cartopy.feature.ShapelyFeature(group_shp.geometries(), cartopy.crs.PlateCarree(),
+#                                               edgecolor='black', facecolor='grey', alpha=0.2, linewidth=1)
+#ax.add_feature(group_feature,zorder=2)
 
 # Add colorbar
 cmap = 'RdYlBu'

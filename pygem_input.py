@@ -117,6 +117,7 @@ rgi_regionsO2 = 'all'
 #rgi_glac_number = 'all'
 #rgi_glac_number = glac_num_fromrange(1,20)
 rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/sample/')
+
 #rgi_glac_number = get_shean_glacier_nos(rgi_regionsO1[0], 2, option_random=1)
 
 # ===== Bias adjustment option =====
@@ -145,8 +146,11 @@ constantarea_years = 0
 
 # Simulation runs
 #  simulation runs are separate such that calibration runs can be run at same time as simulations
+
+#gcm_startyear = 2000
+#gcm_endyear = 2017
 gcm_startyear = 2000
-gcm_endyear = 2017
+gcm_endyear = 2100
 gcm_spinupyears = 0
 gcm_wateryear = 1
 
@@ -172,6 +176,8 @@ synthetic_prec_factor = 1.12
 option_calibration = 1
 # Calibration datasets
 #cal_datasets = ['shean']
+#cal_datasets = ['mcnabb']
+#cal_datasets = ['larsen']
 cal_datasets = ['mcnabb', 'larsen']
 #cal_datasets = ['wgms_d', 'group']
 #cal_datasets = ['shean', 'wgms_d', 'wgms_ee', 'group']
@@ -322,7 +328,7 @@ modelparams_colnames = ['lrgcm', 'lrglac', 'precfactor', 'precgrad', 'ddfsnow', 
 # Model parameter filepath
 if option_calibration == 1:
     modelparams_fp_dict = {
-            1:  output_filepath + 'cal_opt1/',
+            1:  output_filepath + 'cal_opt1/reg1/',
             3:  output_filepath + 'cal_opt1/',
             4:  output_filepath + 'cal_opt1/',
             6:  output_filepath + 'cal_opt1/reg6/',
