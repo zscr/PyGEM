@@ -113,10 +113,10 @@ rgi_regionsO1 = [1]
 # 2nd order region numbers (RGI V6.0)
 rgi_regionsO2 = 'all'
 # RGI glacier number (RGI V6.0)
-#rgi_glac_number = ['00004']
+rgi_glac_number = ['00570']
 #rgi_glac_number = 'all'
-#rgi_glac_number = glac_num_fromrange(1,20)
-rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/sample/')
+#rgi_glac_number = glac_num_fromrange(1,100)
+#rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/reg1/')
 
 #rgi_glac_number = get_shean_glacier_nos(rgi_regionsO1[0], 2, option_random=1)
 
@@ -149,8 +149,8 @@ constantarea_years = 0
 
 #gcm_startyear = 2000
 #gcm_endyear = 2017
-gcm_startyear = 2000
-gcm_endyear = 2100
+gcm_startyear = 1980
+gcm_endyear = 2017
 gcm_spinupyears = 0
 gcm_wateryear = 1
 
@@ -159,7 +159,7 @@ gcm_wateryear = 1
 hindcast = 0
 if hindcast == 1:
     constantarea_years = 18 # constant years so glacier doesn't evolve until before 2000
-    gcm_startyear = 1980
+    gcm_startyear = 1950
     gcm_endyear = 2017
 
 # Synthetic simulation options
@@ -178,7 +178,7 @@ option_calibration = 1
 #cal_datasets = ['shean']
 #cal_datasets = ['mcnabb']
 #cal_datasets = ['larsen']
-cal_datasets = ['mcnabb', 'larsen']
+cal_datasets = ['larsen']
 #cal_datasets = ['wgms_d', 'group']
 #cal_datasets = ['shean', 'wgms_d', 'wgms_ee', 'group']
 # Calibration output filepath (currently only for option 1)
@@ -263,7 +263,7 @@ sim_stat_cns = ['mean', 'std']
 
 #%% MODEL PARAMETERS 
 # Option to import calibration parameters for each glacier
-option_import_modelparams = 0
+option_import_modelparams = 1
 #print('\nSWITCH OPTION IMPORT MODEL PARAMS BACK!\n')
 #  Option 1 (default) - calibrated model parameters in netcdf files
 #  Option 0 - use the parameters set by the input

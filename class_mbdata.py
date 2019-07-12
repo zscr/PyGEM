@@ -837,13 +837,38 @@ class MBData():
                         main_glac_hyps.iloc[glacnodict[ds.loc[x,'glacno']], 
                                             ds.loc[x,'z1_idx']:ds.loc[x,'z2_idx']+1].sum())
             # Time indices
-            ds['t1_year'] = [int(x.split('-')[0]) for x in ds[self.t1_cn].values]
-            ds['t1_month'] = [int(x.split('-')[1]) for x in ds[self.t1_cn].values]
-            ds['t1_day'] = [int(x.split('-')[2]) for x in ds[self.t1_cn].values]
+#            for x in ds[self.t1_cn].values:
+#                print(x)
+#                print(int(x.split('-')[0]))
+            try:
+                ds['t1_year'] = [int(x.split('-')[0]) for x in ds[self.t1_cn].values]
+                ds['t1_month'] = [int(x.split('-')[1]) for x in ds[self.t1_cn].values]
+                ds['t1_day'] = [int(x.split('-')[2]) for x in ds[self.t1_cn].values]
+#                ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
+                ds['t2_year'] = [int(x.split('-')[0]) for x in ds[self.t2_cn].values]
+                ds['t2_month'] = [int(x.split('-')[1]) for x in ds[self.t2_cn].values]
+                ds['t2_day'] = [int(x.split('-')[2]) for x in ds[self.t2_cn].values]
+            except:
+                ds['t1_year'] = [int(x.split('/')[2]) for x in ds[self.t1_cn].values]
+                ds['t1_month'] = [int(x.split('/')[0]) for x in ds[self.t1_cn].values]
+                ds['t1_day'] = [int(x.split('/')[1]) for x in ds[self.t1_cn].values]
+#                ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
+                ds['t2_year'] = [int(x.split('/')[2]) for x in ds[self.t2_cn].values]
+                ds['t2_month'] = [int(x.split('/')[0]) for x in ds[self.t2_cn].values]
+                ds['t2_day'] = [int(x.split('/')[1]) for x in ds[self.t2_cn].values]
+              
+#            for x in range(ds.shape[0]):
+#                print(ds.loc[x, self.t1_cn])
+#                print(ds.loc[x, 't1_month'], ds.loc[x, 't1_year'])
+#                print(modelsetup.daysinmonth(ds.loc[x, 't1_year'], ds.loc[x, 't1_month']))
+#            ds['t1_year'] = [int(x.split('-')[0]) for x in ds[self.t1_cn].values]
+#            ds['t1_month'] = [int(x.split('-')[1]) for x in ds[self.t1_cn].values]
+#            ds['t1_day'] = [int(x.split('-')[2]) for x in ds[self.t1_cn].values]
+#            ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
+#            ds['t2_year'] = [int(x.split('-')[0]) for x in ds[self.t2_cn].values]
+#            ds['t2_month'] = [int(x.split('-')[1]) for x in ds[self.t2_cn].values]
+#            ds['t2_day'] = [int(x.split('-')[2]) for x in ds[self.t2_cn].values]
             ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
-            ds['t2_year'] = [int(x.split('-')[0]) for x in ds[self.t2_cn].values]
-            ds['t2_month'] = [int(x.split('-')[1]) for x in ds[self.t2_cn].values]
-            ds['t2_day'] = [int(x.split('-')[2]) for x in ds[self.t2_cn].values]
             ds['t2_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t2_year'], row['t2_month']), axis=1)
             ds['t1_datetime'] = pd.to_datetime(
                     pd.DataFrame({'year':ds.t1_year.values, 'month':ds.t1_month.values, 'day':ds.t1_day.values}))
@@ -912,9 +937,9 @@ if __name__ == '__main__':
     ds_output = mb1.retrieve_mb(main_glac_rgi, main_glac_hyps, dates_table)
     
     #%%
-    cal_datasets = ['mcnabb', 'larsen', 'wgms_d', 'wgms_ee']
+#    cal_datasets = ['mcnabb', 'larsen', 'wgms_d', 'wgms_ee']
 #    cal_datasets = ['wgms_d', 'wgms_ee', 'group']
-##    cal_datasets = ['shean']
+    cal_datasets = ['larsen']
 ##    cal_datasets = ['wgms_ee']
 ##    cal_datasets = ['wgms_d']
 ##    cal_datasets = ['group']
