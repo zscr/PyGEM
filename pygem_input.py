@@ -117,7 +117,6 @@ rgi_glac_number = ['00570']
 #rgi_glac_number = 'all'
 #rgi_glac_number = glac_num_fromrange(1,100)
 #rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/reg1/')
-
 #rgi_glac_number = get_shean_glacier_nos(rgi_regionsO1[0], 2, option_random=1)
 
 # ===== Bias adjustment option =====
@@ -159,7 +158,7 @@ gcm_wateryear = 1
 hindcast = 0
 if hindcast == 1:
     constantarea_years = 18 # constant years so glacier doesn't evolve until before 2000
-    gcm_startyear = 1950
+    gcm_startyear = 1960
     gcm_endyear = 2017
 
 # Synthetic simulation options
@@ -177,8 +176,8 @@ option_calibration = 1
 # Calibration datasets
 #cal_datasets = ['shean']
 #cal_datasets = ['mcnabb']
-#cal_datasets = ['larsen']
 cal_datasets = ['larsen']
+#cal_datasets = ['mcnabb', 'larsen']
 #cal_datasets = ['wgms_d', 'group']
 #cal_datasets = ['shean', 'wgms_d', 'wgms_ee', 'group']
 # Calibration output filepath (currently only for option 1)
@@ -603,7 +602,7 @@ mcnabb_area_cn = 'area'
 
 # ===== LARSEN GEODETIC =====
 larsen_fp = main_directory + '/../DEMs/larsen/'
-larsen_fn = 'larsen2015_supplementdata_wRGIIds.csv'
+larsen_fn = 'larsen2015_supplementdata_wRGIIds_v3.csv'
 larsen_rgiid_cn = 'RGIId'
 larsen_mb_cn = 'mb_mwea'
 larsen_mb_err_cn = 'mb_mwea_sigma'
