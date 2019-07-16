@@ -115,7 +115,13 @@ rgi_regionsO2 = 'all'
 # RGI glacier number (RGI V6.0)
 rgi_glac_number = ['00571', '19419', '14683']
 #rgi_glac_number = 'all'
+<<<<<<< HEAD
 #rgi_glac_number = glac_num_fromrange(1,1550)
+=======
+#rgi_glac_number = ['19419']
+rgi_glac_number = ['14683']
+#rgi_glac_number = glac_num_fromrange(1,2000)
+>>>>>>> upstream/master
 #rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/reg1/')
 #rgi_glac_number = get_shean_glacier_nos(rgi_regionsO1[0], 2, option_random=1)
 
@@ -199,6 +205,8 @@ tempchange_bnds_list_init = [(0,0), (0,0), (-2.5,2.5), (-10,10)]
 
 # Threshold to update the model parameters (based on the difference in zscores)
 zscore_update_threshold = 0.1
+# Additional calibration rounds in case optimization is getting stuck
+extra_calrounds = 3
 
 # OPTION 2: MCMC 
 # Chain options 
