@@ -113,9 +113,9 @@ rgi_regionsO1 = [1]
 # 2nd order region numbers (RGI V6.0)
 rgi_regionsO2 = 'all'
 # RGI glacier number (RGI V6.0)
-rgi_glac_number = ['00570']
+rgi_glac_number = ['00571', '19419', '14683']
 #rgi_glac_number = 'all'
-#rgi_glac_number = glac_num_fromrange(1,100)
+#rgi_glac_number = glac_num_fromrange(1,1550)
 #rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/reg1/')
 #rgi_glac_number = get_shean_glacier_nos(rgi_regionsO1[0], 2, option_random=1)
 
@@ -141,7 +141,7 @@ option_wateryear = 1
 #  Option 1 (default) - water year (ex. 2000: Oct 1 1999 - Sept 30 2000)
 #  Option 2 - calendar year
 #  Option 3 - define start/end months and days (BE CAREFUL WHEN CUSTOMIZING USING OPTION 3 - DOUBLE CHECK YOUR DATES)
-constantarea_years = 0
+constantarea_years = 37
 
 # Simulation runs
 #  simulation runs are separate such that calibration runs can be run at same time as simulations
@@ -594,7 +594,7 @@ mauer_time2_cn = 't2'
 mcnabb_fp = main_directory + '/../DEMs/McNabb_data/wgms_dv/'
 mcnabb_fn = 'Alaska_dV_17jun_preprocessed.csv'
 mcnabb_rgiid_cn = 'RGIId'
-mcnabb_mb_cn = 'mb_mwea'
+mcnabb_mb_cn = 'mb_mwea'  
 mcnabb_mb_err_cn = 'mb_mwea_sigma'
 mcnabb_time1_cn = 'date0'
 mcnabb_time2_cn = 'date1'
