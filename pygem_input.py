@@ -116,8 +116,11 @@ rgi_regionsO2 = 'all'
 rgi_glac_number = ['00571', '19419', '14683']
 #rgi_glac_number = 'all'
 <<<<<<< HEAD
+<<<<<<< HEAD
 #rgi_glac_number = glac_num_fromrange(1,1550)
 =======
+=======
+>>>>>>> upstream/master
 #rgi_glac_number = ['19419']
 rgi_glac_number = ['14683']
 #rgi_glac_number = glac_num_fromrange(1,2000)
