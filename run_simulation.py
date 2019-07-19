@@ -768,6 +768,7 @@ def main(list_packed_vars):
                 modelparameters = modelparameters_all.iloc[mp_idx,:]
                 
             if debug:
+#                print(glacier_RGIId, ':', [modelparameters[0:8]])
                 print(glacier_RGIId, ':', [modelparameters[2], modelparameters[4], modelparameters[7]])
                 debug_mb = True
             else:
