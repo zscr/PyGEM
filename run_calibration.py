@@ -1436,9 +1436,7 @@ def main(list_packed_vars):
                     glacier_cal_compare.loc[cal_idx, 'zscore'] = (
                             (glacier_cal_compare.loc[cal_idx, 'model'] - glacier_cal_compare.loc[cal_idx, 'obs']) /
                             glacier_cal_compare.loc[cal_idx, 'uncertainty'])
-                    
-                    print('batman:', glacier_cal_compare.loc[cal_idx, 'model'], glacier_cal_compare.loc[cal_idx, 'obs'])
-                    
+                                        
                 # Weighted z-score according to timespan and fraction of glacier area covered
                 glacier_cal_compare['zscore_weighted'] = (
                         glacier_cal_compare['zscore'] * (glacier_cal_compare['t2'] - glacier_cal_compare['t1'])

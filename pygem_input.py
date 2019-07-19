@@ -115,7 +115,7 @@ rgi_regionsO2 = 'all'
 # RGI glacier number (RGI V6.0)
 rgi_glac_number = ['03861']
 #rgi_glac_number = 'all'
-rgi_glac_number = ['14683'] # problematic glacier for Zoe
+#rgi_glac_number = ['14683'] # problematic glacier for Zoe
 #rgi_glac_number = glac_num_fromrange(1,2000)
 #rgi_glac_number = get_same_glaciers(output_filepath + 'cal_opt1/reg1/')
 #rgi_glac_number = get_shean_glacier_nos(rgi_regionsO1[0], 2, option_random=1)
