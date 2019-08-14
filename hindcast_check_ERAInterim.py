@@ -85,27 +85,27 @@ for i in range(0, num_glac - 1):
 
 #    print(zscore[i])
 #%% X-Y plot
-#x_values = mb_cal
-#y_values = mb_subset_sum
-#x2_values = [-6, 1]
-#y2_values = [-6, 1]
-#
-#fig, ax = plt.subplots(1, 1, squeeze=False, sharex=False, sharey=False, gridspec_kw = {'wspace':0.4, 'hspace':0.15})
-#ax[0,0].scatter(x_values, y_values, color='k', zorder=2, s=2)
-#ax[0,0].plot(x2_values, y2_values, color='b', linewidth=1, zorder=2, label='1:1 line')
-#ax[0,0].text(0.5, 1.05, 'Checking ERA-Interim Hindcast', size=10, horizontalalignment='center', verticalalignment='top', transform=ax[0,0].transAxes)
-#ax[0,0].set_xlabel('Mass balance calibration data [m w.e. yr^-1]', size=12)
-#ax[0,0].set_ylabel('Simulation-produced mass balance [m w.e. yr^-1]', size=12)
-#ax[0,0].set_xlim(left=-6, right=1)
-#ax[0,0].set_ylim(top=1, bottom=-6)
-#
-## save figure
-#fig.set_size_inches(4, 4)
-#figure_fp = os.getcwd() + '/../Output/plots/'
-#if os.path.exists(figure_fp) == False:
-#    os.makedirs(figure_fp)
-#figure_fn = 'hindcast_check_plot_xy.png'
-#fig.savefig(figure_fp + figure_fn, bbox_inches='tight', dpi=300)
+x_values = mb_cal
+y_values = mb_subset_sum
+x2_values = [-6, 1]
+y2_values = [-6, 1]
+
+fig, ax = plt.subplots(1, 1, squeeze=False, sharex=False, sharey=False, gridspec_kw = {'wspace':0.4, 'hspace':0.15})
+ax[0,0].scatter(x_values, y_values, color='k', zorder=2, s=2)
+ax[0,0].plot(x2_values, y2_values, color='b', linewidth=1, zorder=2, label='1:1 line')
+ax[0,0].text(0.5, 1.05, 'Checking ERA-Interim Hindcast', size=10, horizontalalignment='center', verticalalignment='top', transform=ax[0,0].transAxes)
+ax[0,0].set_xlabel('Mass balance calibration data [m w.e. yr^-1]', size=12)
+ax[0,0].set_ylabel('Simulation-produced mass balance [m w.e. yr^-1]', size=12)
+ax[0,0].set_xlim(left=-6, right=1)
+ax[0,0].set_ylim(top=1, bottom=-6)
+
+# save figure
+fig.set_size_inches(4, 4)
+figure_fp = os.getcwd() + '/../Output/plots/'
+if os.path.exists(figure_fp) == False:
+    os.makedirs(figure_fp)
+figure_fn = 'hindcast_check_plot_xy.png'
+fig.savefig(figure_fp + figure_fn, bbox_inches='tight', dpi=300)
 
 ##%% HISTOGRAM PLOT
 #diff = mb_subset_sum - mb_cal

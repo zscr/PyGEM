@@ -523,8 +523,9 @@ def runmassbalance(modelparameters, glacier_rgi_table, glacier_area_t0, icethick
                         print('frontalablation_volumeloss remaining [m3]:', frontalablation_volumeloss)
                         print('ice thickness:', icethickness_t0[glac_idx_fa[0]].round(0), 
                               'waterdepth:', waterdepth.round(0), 
-                              'height calving front:', height_calving.round(0), 
-                              'width [m]:', (width_calving).round(0))                    
+                              'height calving front:', height_calving.round(0))
+#                              , 
+#                              'width [m]:', width_calving.round(0))                    
                         
                 # SURFACE TYPE
                 # Annual surface type [-]

@@ -13,80 +13,80 @@ from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
-#%% X-Y PLOT
-ds = pd.read_csv(os.getcwd() + '/Alaska_dV_17jun_preprocessed.csv')
-#dens_ice = 917 # in kg/m^3
-mb = ds.loc[:,'mb_mwea']
-#area = ds.loc[:,'area']
-mb_uncertainty = ds.loc[:,'mb_mwea_sigma']
-
-# X,Y values
-x_values = mb  
-y_values = mb_uncertainty
-#y2_values = ds.loc[...]
-
-# Set up your plot (and/or subplots)
-fig, ax = plt.subplots(1, 1, squeeze=False, sharex=False, sharey=False, gridspec_kw = {'wspace':0.4, 'hspace':0.15})
-             
-# Plot
-#  zorder controls the order of the plots (higher zorder plots on top)
-#  label used to automatically generate legends (legends can be done manually for more control)
-#ax[0,0].plot(x_values, y_values, color='k', linewidth=1, zorder=2, label='plot1')
-ax[0,0].scatter(x_values, y_values, color='k', zorder=2, s=2)
-#ax[0,0].plot(x_values, y2_values, color='b', linewidth=1, zorder=2, label='plot2')
-
-# Fill between
-#  fill between is useful for putting colors between plots (e.g., error bounds)
-#ax[0,0].fill_between(x, y_low, y_high, facecolor='k', alpha=0.2, zorder=1)
-
-# Text
-#  text can be used to manually add labels or to comment on plot
-#  transform=ax.transAxes means the x and y are between 0-1
-ax[0,0].text(0.5, 0.99, 'Glacier mass balance vs area', size=10, horizontalalignment='center', verticalalignment='top', 
-             transform=ax[0,0].transAxes)
-
-# X-label
-ax[0,0].set_xlabel('mass balance, m w.e. yr^-1', size=12)
-#ax[0,0].set_xlim(time_values_annual[t1_idx:t2_idx].min(), time_values_annual[t1_idx:t2_idx].max())
-#ax[0,0].xaxis.set_tick_params(labelsize=12)
-#ax[0,0].xaxis.set_major_locator(plt.MultipleLocator(50))
-#ax[0,0].xaxis.set_minor_locator(plt.MultipleLocator(10))
-#ax[0,0].set_xticklabels(['2015','2050','2100'])       
- 
-# Y-label
-ax[0,0].set_ylabel('mass balance uncertainty, m w.e. yr^-1', size=12)
-#ax[0,0].set_ylim(0,1.1)
-#ax[0,0].yaxis.set_major_locator(plt.MultipleLocator(0.2))
-#ax[0,0].yaxis.set_minor_locator(plt.MultipleLocator(0.05))
-
-# Tick parameters
-#  controls the plotting of the ticks
-#ax[0,0].yaxis.set_ticks_position('both')
-#ax[0,0].tick_params(axis='both', which='major', labelsize=12, direction='inout')
-#ax[0,0].tick_params(axis='both', which='minor', labelsize=12, direction='inout')               
-    
-# Example Legend
-# Option 1: automatic based on labels
-ax[0,0].legend(loc=(0.05, 0.05), fontsize=10, labelspacing=0.25, handlelength=1, handletextpad=0.25, borderpad=0, 
-               frameon=False)
-# Option 2: manually define legend
-#leg_lines = []
-#labels = ['plot1', 'plot2']
-#label_colors = ['k', 'b']
-#for nlabel, label in enumerate(labels):
-#    line = Line2D([0,1],[0,1], color=label_colors[nlabel], linewidth=1)
-#    leg_lines.append(line)
-#ax[0,0].legend(leg_lines, labels, loc=(0.05,0.05), fontsize=10, labelspacing=0.25, handlelength=1, 
-#               handletextpad=0.25, borderpad=0, frameon=False)
-
-# Save figure
-#  figures can be saved in any format (.jpg, .png, .pdf, etc.)
-fig.set_size_inches(4, 4)
-figure_fp = os.getcwd() + '/../Output/'
-if os.path.exists(figure_fp) == False:
-    os.makedirs(figure_fp)
-figure_fn = 'massbalance_uncertainty.png'
-fig.savefig(figure_fp + figure_fn, bbox_inches='tight', dpi=300)
+##%% X-Y PLOT
+#ds = pd.read_csv(os.getcwd() + '/Alaska_dV_17jun_preprocessed.csv')
+##dens_ice = 917 # in kg/m^3
+#mb = ds.loc[:,'mb_mwea']
+##area = ds.loc[:,'area']
+#mb_uncertainty = ds.loc[:,'mb_mwea_sigma']
+#
+## X,Y values
+#x_values = mb  
+#y_values = mb_uncertainty
+##y2_values = ds.loc[...]
+#
+## Set up your plot (and/or subplots)
+#fig, ax = plt.subplots(1, 1, squeeze=False, sharex=False, sharey=False, gridspec_kw = {'wspace':0.4, 'hspace':0.15})
+#             
+## Plot
+##  zorder controls the order of the plots (higher zorder plots on top)
+##  label used to automatically generate legends (legends can be done manually for more control)
+##ax[0,0].plot(x_values, y_values, color='k', linewidth=1, zorder=2, label='plot1')
+#ax[0,0].scatter(x_values, y_values, color='k', zorder=2, s=2)
+##ax[0,0].plot(x_values, y2_values, color='b', linewidth=1, zorder=2, label='plot2')
+#
+## Fill between
+##  fill between is useful for putting colors between plots (e.g., error bounds)
+##ax[0,0].fill_between(x, y_low, y_high, facecolor='k', alpha=0.2, zorder=1)
+#
+## Text
+##  text can be used to manually add labels or to comment on plot
+##  transform=ax.transAxes means the x and y are between 0-1
+#ax[0,0].text(0.5, 0.99, 'Glacier mass balance vs area', size=10, horizontalalignment='center', verticalalignment='top', 
+#             transform=ax[0,0].transAxes)
+#
+## X-label
+#ax[0,0].set_xlabel('mass balance, m w.e. yr^-1', size=12)
+##ax[0,0].set_xlim(time_values_annual[t1_idx:t2_idx].min(), time_values_annual[t1_idx:t2_idx].max())
+##ax[0,0].xaxis.set_tick_params(labelsize=12)
+##ax[0,0].xaxis.set_major_locator(plt.MultipleLocator(50))
+##ax[0,0].xaxis.set_minor_locator(plt.MultipleLocator(10))
+##ax[0,0].set_xticklabels(['2015','2050','2100'])       
+# 
+## Y-label
+#ax[0,0].set_ylabel('mass balance uncertainty, m w.e. yr^-1', size=12)
+##ax[0,0].set_ylim(0,1.1)
+##ax[0,0].yaxis.set_major_locator(plt.MultipleLocator(0.2))
+##ax[0,0].yaxis.set_minor_locator(plt.MultipleLocator(0.05))
+#
+## Tick parameters
+##  controls the plotting of the ticks
+##ax[0,0].yaxis.set_ticks_position('both')
+##ax[0,0].tick_params(axis='both', which='major', labelsize=12, direction='inout')
+##ax[0,0].tick_params(axis='both', which='minor', labelsize=12, direction='inout')               
+#    
+## Example Legend
+## Option 1: automatic based on labels
+#ax[0,0].legend(loc=(0.05, 0.05), fontsize=10, labelspacing=0.25, handlelength=1, handletextpad=0.25, borderpad=0, 
+#               frameon=False)
+## Option 2: manually define legend
+##leg_lines = []
+##labels = ['plot1', 'plot2']
+##label_colors = ['k', 'b']
+##for nlabel, label in enumerate(labels):
+##    line = Line2D([0,1],[0,1], color=label_colors[nlabel], linewidth=1)
+##    leg_lines.append(line)
+##ax[0,0].legend(leg_lines, labels, loc=(0.05,0.05), fontsize=10, labelspacing=0.25, handlelength=1, 
+##               handletextpad=0.25, borderpad=0, frameon=False)
+#
+## Save figure
+##  figures can be saved in any format (.jpg, .png, .pdf, etc.)
+#fig.set_size_inches(4, 4)
+#figure_fp = os.getcwd() + '/../Output/'
+#if os.path.exists(figure_fp) == False:
+#    os.makedirs(figure_fp)
+#figure_fn = 'massbalance_uncertainty.png'
+#fig.savefig(figure_fp + figure_fn, bbox_inches='tight', dpi=300)
 
 
 #%% MAP PLOT
@@ -101,7 +101,7 @@ east = -130
 south = 55
 north = 65
 
-rgiO1_shp_fn = os.getcwd() + '/../RGI/rgi60/00_rgi60_regions/00_rgi60_O1Regions.shp'
+rgiO1_shp_fn = os.getcwd() + '/../RGI/rgi60/01_rgi60_Alaska/01_rgi60_Alaska.shp'
         
 
 # Time, Latitude, Longitude
@@ -111,8 +111,10 @@ rgiO1_shp_fn = os.getcwd() + '/../RGI/rgi60/00_rgi60_regions/00_rgi60_O1Regions.
 #sizes = [100, 50, 20]
 
 #load both larsen and mcnabb datasets
-ds_larsen = pd.read_csv(os.getcwd() + '/larsen2015_supplementdata_wRGIIds.csv')
-ds_mcnabb = pd.read_csv(os.getcwd() + '/Alaska_dV_17jun_preprocessed.csv')
+ds_larsen = pd.read_csv(os.getcwd() + '/../DEMs/larsen/larsen2015_supplementdata_wRGIIds.csv')
+ds_mcnabb = pd.read_csv(os.getcwd() + '/../DEMs/McNabb_data/wgms_dv/Alaska_dV_17jun_preprocessed.csv')
+
+l_rgiids = ds_larsen.loc[:,'RGIId'].tolist()
 
 #lon lat and mass balance vectors
 m_lat = ds_mcnabb.loc[:,'CenLat']
@@ -167,34 +169,45 @@ ax.set_yticks(np.arange(south,north+1,ytick), cartopy.crs.PlateCarree())
 ax.set_xlabel(xlabel, size=labelsize)
 ax.set_ylabel(ylabel, size=labelsize)
 
-# Add regions
-#  facecolor='none' just plots the lines
-#group_shp = cartopy.io.shapereader.Reader(rgiO1_shp_fn)
+## Add regions
+##  facecolor='none' just plots the lines
+group_shp = cartopy.io.shapereader.Reader(rgiO1_shp_fn)
 #group_feature = cartopy.feature.ShapelyFeature(group_shp.geometries(), cartopy.crs.PlateCarree(),
-#                                               edgecolor='black', facecolor='grey', alpha=0.2, linewidth=1)
-#ax.add_feature(group_feature,zorder=2)
-
-# Add colorbar
-cmap = 'RdYlBu'
-norm = plt.Normalize(-2, 2)
-var_label = 'mass balance, m w.e. yr^-1'
-
-sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
-sm._A = []
-plt.colorbar(sm, ax=ax, fraction=0.024, pad=0.01)
-fig.text(1, 0.5, var_label, va='center', ha='center', rotation='vertical', size=labelsize)
-
-ax.scatter(lons, lats, c=mass_balance, cmap=cmap, s=sizes, norm=norm, edgecolors='k', zorder=3)
-
-#ax.pcolormesh(lons, lats, mass_balance, cmap=cmap, norm=norm, zorder=2, alpha=0.8)            
-
-# Title
-ax.set_title('Mass balance of Alaskan glaciers')
-
+#                                               edgecolor='black', facecolor='yellow', alpha=0.2, linewidth=1)
+##%%
+for rec in group_shp.records():
+    if rec.attributes['RGIId'] in l_rgiids:
+        print(rec.attributes['RGIId'])
+        group = rec.attributes['RGIId']
+#                ax.add_geometries(rec.geometry, cartopy.crs.PlateCarree(), facecolor='None', edgecolor='Black', 
+#                                  linewidth=0.5, zorder=3)
+        ax.add_geometries(rec.geometry, cartopy.crs.PlateCarree(), facecolor='y', 
+                          edgecolor='Black', linewidth=0.5, alpha=0.5, zorder=3)
+#%%      
+##ax.add_feature(group_feature,zorder=2)
+#
+## Add colorbar
+#cmap = 'RdYlBu'
+#norm = plt.Normalize(-2, 2)
+#var_label = 'mass balance, m w.e. yr^-1'
+#
+#sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+#sm._A = []
+#plt.colorbar(sm, ax=ax, fraction=0.024, pad=0.01)
+#fig.text(1, 0.5, var_label, va='center', ha='center', rotation='vertical', size=labelsize)
+#
+#ax.scatter(lons, lats, c=mass_balance, cmap=cmap, s=sizes, norm=norm, edgecolors='k', zorder=3)
+#
+##ax.pcolormesh(lons, lats, mass_balance, cmap=cmap, norm=norm, zorder=2, alpha=0.8)            
+#
+## Title
+#ax.set_title('Mass balance of Alaskan glaciers')
+#
 # Save figure
 fig.set_size_inches(6,4)
 figure_fp = os.getcwd() + '/../Output/'
 if os.path.exists(figure_fp) == False:
     os.makedirs(figure_fp)
-fig_fn = 'mb_map_mesh.png'
+fig_fn = 'map_116glac.png'
 fig.savefig(figure_fp + fig_fn, bbox_inches='tight', dpi=300)
+plt.show()
