@@ -111,7 +111,7 @@ ax[0,0].set_xlabel('Year', size=12)
 #ax[0,0].set_xticklabels(['2015','2050','2100'])       
  
 # Y-label
-ax[0,0].set_ylabel('Mass Balance [m w.e. yr^-1]', size=12)
+ax[0,0].set_ylabel('Mass Balance [m w.e. yr$^{-1}$]', size=12)
 ax[0,0].set_ylim(-2,1)
 #ax[0,0].yaxis.set_major_locator(plt.MultipleLocator(0.2))x
 #ax[0,0].yaxis.set_minor_locator(plt.MultipleLocator(0.05))

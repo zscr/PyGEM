@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Sep 12 22:21:02 2019
+
+@author: zoescrewvala
+"""
+
+import os
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+import numpy as np
+import pandas as pd
+import xarray as xr
+import pygemfxns_gcmbiasadj as pygemfxns
+
+#%%
+sim_list = ['CanESM2', 'CCSM4', 'CSIRO-Mk3-6-0', 'CNRM-CM5', 'GFDL-CM3', 'GFDL-ESM2M', 'GISS-E2-R', 'IPSL-CM5A-LR', 'MPI-ESM-LR', 'NorESM1-M']
+abl_list0 = []
+abl_0 = []
+abl_list1 = []
+abl_1 = []
+abl_list2 = []
+abl_2 = []
+abl_list3 = []
+abl_3 = []
+abl_list4 = []
+abl_4 = []
+abl_list5 = []
+abl_5 = []
+abl_list6 = []
+abl_6 = []
+abl_list7 = []
+abl_7 = []
+abl_list8 = []
+abl_8 = []
+abl_list9 = []
+abl_9 = []
+for i in range(len(sim_list)):
+    ds = xr.open_dataset(os.getcwd() + '/../Output/simulations/' + sim_list[i] + '/R1_' + sim_list[i] + '_rcp85_c1_ba1_1sets_1980_2100.nc')
+    abl = ds.variables['frontalablation_glac_monthly'].values[:,:,0]
+    abl_sum = np.sum(abl, axis=1)
+#    rgiid = ds.variables['RGIID'].values[:,:,0]
+    for j in range(len(abl_sum)):
+        if abl_sum[j] > 0:
+            if i == 0:
+                abl_list0.append(j)
+                abl_0.append(abl_sum[j])
+            if i == 1:
+                abl_list1.append(j)
+                abl_1.append(abl_sum[j])
+            if i == 2:
+                abl_list2.append(j)
+                abl_2.append(abl_sum[j])
+            if i == 3:
+                abl_list3.append(j)
+                abl_3.append(abl_sum[j])
+            if i == 4:
+                abl_list4.append(j)
+                abl_4.append(abl_sum[j])
+            if i == 5:
+                abl_list5.append(j)
+                abl_5.append(abl_sum[j])
+            if i == 6:
+                abl_list6.append(j)
+                abl_6.append(abl_sum[j])
+            if i == 7:
+                abl_list7.append(j)
+                abl_7.append(abl_sum[j])
+            if i == 8:
+                abl_list8.append(j)
+                abl_8.append(abl_sum[j])
+            if i == 9:
+                abl_list9.append(j)
+                abl_9.append(abl_sum[j])
+
+glac_idxs_set = set(abl_list0 + abl_list1 + abl_list2 + abl_list3 + abl_list4 + abl_list5 + abl_list6 + abl_list7 + abl_list8 + abl_list9)
+glac_idxs = list(glac_idxs_set)
+#glac_idxs = [x + 2 for x in glac_idxs_list]
+
+ds = pd.read_csv(os.getcwd() + '/../DEMs/larsen/larsen2015_supplementdata_wRGIIds.csv')
+rgiids = ds.loc[:,'RGIId']
+abl_rgiids = rgiids[glac_idxs]
+print(abl_rgiids)
+
+#%% EXTRACTING FRONTAL ABLATION IN GT YR^-1
+abl_all_glac = np.empty((10,116), dtype=float)
+for i in range(len(sim_list)):
+    ds = xr.open_dataset(os.getcwd() + '/../Output/simulations/' + sim_list[i] + '/R1_' + sim_list[i] + '_rcp85_c1_ba1_1sets_1980_2100.nc')
+    abl = ds.variables['frontalablation_glac_monthly'].values[:,:,0]
+    abl_sum = np.sum(abl, axis=1)
+    abl_all_glac[i] = abl_sum
+abl_all_sum = np.sum(abl_all_glac, axis=0)
+abl_nonzero = abl_all_sum[glac_idxs]
+abl_nonzero_annual = abl_nonzero/121
+print('---')
+print(abl_nonzero_annual)
+    
+

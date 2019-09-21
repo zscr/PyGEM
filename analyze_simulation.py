@@ -376,10 +376,10 @@ def load_glacier_data(rgi_regions,
         main_glac_rgi_region = modelsetup.selectglaciersrgitable(rgi_regionsO1=[rgi_region], rgi_regionsO2 = 'all', 
                                                                  rgi_glac_number='all')
          # Glacier hypsometry [km**2]
-        main_glac_hyps_region = modelsetup.import_Husstable(main_glac_rgi_region, [rgi_region], input.hyps_filepath,
+        main_glac_hyps_region = modelsetup.import_Husstable(main_glac_rgi_region, input.hyps_filepath,
                                                             input.hyps_filedict, input.hyps_colsdrop)
         # Ice thickness [m], average
-        main_glac_icethickness_region= modelsetup.import_Husstable(main_glac_rgi_region, [rgi_region], 
+        main_glac_icethickness_region= modelsetup.import_Husstable(main_glac_rgi_region, 
                                                                  input.thickness_filepath, input.thickness_filedict, 
                                                                  input.thickness_colsdrop)
         if rgi_region == rgi_regions[0]:
@@ -399,7 +399,7 @@ def load_glacier_data(rgi_regions,
             # Calibration data
             cal_data = pd.DataFrame()
             for dataset in cal_datasets:
-                cal_subset = class_mbdata.MBData(name=dataset, rgi_regionO1=rgi_region)
+                cal_subset = class_mbdata.MBData(name=dataset)
                 cal_subset_data = cal_subset.retrieve_mb(main_glac_rgi_region, main_glac_hyps_region, dates_table)
                 cal_data = cal_data.append(cal_subset_data, ignore_index=True)
             cal_data = cal_data.sort_values(['glacno', 't1_idx'])
@@ -4117,7 +4117,7 @@ if option_wgms_compare == 1:
 
         cal_data = pd.DataFrame()
         for dataset in cal_datasets:
-            cal_subset = class_mbdata.MBData(name=dataset, rgi_regionO1=reg)
+            cal_subset = class_mbdata.MBData(name=dataset)
             cal_subset_data = cal_subset.retrieve_mb(main_glac_rgi_reg, main_glac_hyps_reg, dates_table)
             cal_data = cal_data.append(cal_subset_data, ignore_index=True)
         cal_data = cal_data.sort_values(['glacno', 't1_idx'])
@@ -5290,6 +5290,55 @@ if option_plot_cmip5_normalizedchange_proposal == 1:
     
     
 #%% EXTRA CODE
+rgi_glac_number_fn = '../SPC_PYGEM/PyGEM/R131415_rgi_glac_number_batch_0.pkl'
+with open(rgi_glac_number_fn, 'rb') as f:
+    glac_no = pickle.load(f)
+    
+#rgi_glac_number_fn = '../SPC_PYGEM/PyGEM/R131415_rgi_glac_number_batch_0_check.pkl'
+#with open(rgi_glac_number_fn, 'rb') as f:
+#    glac_no_check = pickle.load(f)
+
+import spc_split_glaciers
+glac_no_batches = spc_split_glaciers.split_list(glac_no, n=24, option_ordered=0)
+
+
+list_fns = ['R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--1.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--2.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--3.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--4.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--5.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--6.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--7.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--8.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--9.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--10.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--12.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--13.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--14.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--15.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--16.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--18.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--19.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--20.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--21.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--22.nc',
+            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--23.nc']
+###list_fns = ['R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--8.nc', 
+###            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch0--10.nc']
+###list_fns = ['R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch7--14.nc', 
+###            'R131415_CCSM4_rcp26_c2_ba1_100sets_2000_2100_batch7--16.nc']
+#
+netcdf_fp = input.main_directory + '/../SPC_PYGEM/'
+for i in list_fns:
+    ds = xr.open_dataset(netcdf_fp + i)
+    df = pd.DataFrame(ds.glacier_table.values, columns=ds.glac_attrs)
+    print(str(int(df.loc[0,'O1Region'])) + '.' + str(int(df.loc[0,'glacno'])).zfill(5),
+          str(int(df.loc[1,'O1Region'])) + '.' + str(int(df.loc[1,'glacno'])).zfill(5),
+          str(int(df.loc[2,'O1Region'])) + '.' + str(int(df.loc[2,'glacno'])).zfill(5))
+#    print(str(int(df.loc[df.shape[0]-1,'O1Region'])) + '.' + str(int(df.loc[df.shape[0]-1,'glacno'])))
+    
+
+#%%
     
 # Code for individual glacier changes mass balance vs. climate
 #        # Multimodel means

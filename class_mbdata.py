@@ -18,14 +18,11 @@ class MBData():
     ----------
     name : str
         name of mass balance dataset.
-    rgi_regionO1 : int
-        number of RGI order 1 region.
     ds_fp : str
         file path 
     """
     def __init__(self, 
                  name='wgms_d',
-                 rgi_regionO1=input.rgi_regionsO1[0]
                  ):
         """
         Add variable name and specific properties associated with each variable.
@@ -35,7 +32,6 @@ class MBData():
         self.name = name
         # Set parameters for ERA-Interim and CMIP5 netcdf files
         if self.name == 'shean': 
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.shean_fp
             self.ds_fn = input.shean_fn
             self.rgi_glacno_cn = input.shean_rgi_glacno_cn
@@ -45,11 +41,20 @@ class MBData():
             self.t2_cn = input.shean_time2_cn
             self.area_cn = input.shean_area_cn
             
+        elif self.name == 'berthier': 
+            self.ds_fp = input.berthier_fp
+            self.ds_fn = input.berthier_fn
+            self.rgi_glacno_cn = input.berthier_rgi_glacno_cn
+            self.mb_mwea_cn = input.berthier_mb_cn
+            self.mb_mwea_err_cn = input.berthier_mb_err_cn
+            self.t1_cn = input.berthier_time1_cn
+            self.t2_cn = input.berthier_time2_cn
+            self.area_cn = input.berthier_area_cn
+            
         elif self.name == 'mcnabb':
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.mcnabb_fp
             self.ds_fn = input.mcnabb_fn
-            self.rgiid = input.mcnabb_rgiid_cn
+            self.rgi_glacno_cn = input.mcnabb_rgiid_cn
             self.mb_mwea_cn = input.mcnabb_mb_cn
             self.mb_mwea_err_cn = input.mcnabb_mb_err_cn
             self.t1_cn = input.mcnabb_time1_cn
@@ -57,10 +62,9 @@ class MBData():
             self.area_cn = input.mcnabb_area_cn
         
         elif self.name == 'larsen':
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.larsen_fp
             self.ds_fn = input.larsen_fn
-            self.rgiid = input.larsen_rgiid_cn
+            self.rgi_glacno_cn = input.larsen_rgiid_cn
             self.mb_mwea_cn = input.larsen_mb_cn
             self.mb_mwea_err_cn = input.larsen_mb_err_cn
             self.t1_cn = input.larsen_time1_cn
@@ -71,7 +75,6 @@ class MBData():
             self.data_fp = input.brun_fp
             
         elif self.name == 'mauer':
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.mauer_fp
             self.ds_fn = input.mauer_fn
             self.rgi_glacno_cn = input.mauer_rgi_glacno_cn
@@ -80,8 +83,19 @@ class MBData():
             self.t1_cn = input.mauer_time1_cn
             self.t2_cn = input.mauer_time2_cn
             
+        elif self.name == 'wgms_d':
+            self.ds_fp = input.wgms_fp
+            self.ds_fn = input.wgms_d_fn_preprocessed
+            self.rgi_glacno_cn = input.wgms_rgi_glacno_cn
+            self.thickness_chg_cn = input.wgms_d_thickness_chg_cn
+            self.thickness_chg_err_cn = input.wgms_d_thickness_chg_err_cn
+            self.volume_chg_cn = input.wgms_d_volume_chg_cn
+            self.volume_chg_err_cn = input.wgms_d_volume_chg_err_cn
+            self.z1_cn = input.wgms_d_z1_cn
+            self.z2_cn = input.wgms_d_z2_cn
+            self.obs_type_cn = input.wgms_obs_type_cn
+        
         elif self.name == 'wgms_ee':
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.wgms_fp
             self.ds_fn = input.wgms_ee_fn_preprocessed
             self.rgi_glacno_cn = input.wgms_rgi_glacno_cn
@@ -93,21 +107,7 @@ class MBData():
             self.z2_cn = input.wgms_ee_z2_cn
             self.obs_type_cn = input.wgms_obs_type_cn
             
-        elif self.name == 'wgms_d':
-            self.rgi_regionO1 = rgi_regionO1
-            self.ds_fp = input.wgms_fp
-            self.ds_fn = input.wgms_d_fn_preprocessed
-            self.rgi_glacno_cn = input.wgms_rgi_glacno_cn
-            self.thickness_chg_cn = input.wgms_d_thickness_chg_cn
-            self.thickness_chg_err_cn = input.wgms_d_thickness_chg_err_cn
-            self.volume_chg_cn = input.wgms_d_volume_chg_cn
-            self.volume_chg_err_cn = input.wgms_d_volume_chg_err_cn
-            self.z1_cn = input.wgms_d_z1_cn
-            self.z2_cn = input.wgms_d_z2_cn
-            self.obs_type_cn = input.wgms_obs_type_cn
-            
         elif self.name == 'cogley':
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.cogley_fp
             self.ds_fn = input.cogley_fn_preprocessed
             self.rgi_glacno_cn = input.cogley_rgi_glacno_cn
@@ -118,15 +118,13 @@ class MBData():
             self.obs_type_cn = input.cogley_obs_type_cn
             
         elif self.name == 'group':
-            self.rgi_regionO1 = rgi_regionO1
             self.ds_fp = input.mb_group_fp
             self.ds_fn = input.mb_group_data_fn
             self.ds_dict_fn = input.mb_group_dict_fn
             self.rgi_regionO1_cn = 'rgi_regionO1'
             self.t1_cn = input.mb_group_t1_cn
             self.t2_cn = input.mb_group_t2_cn
-            
-            
+    
             
     def retrieve_mb(self, main_glac_rgi, main_glac_hyps, dates_table):
         """
@@ -146,34 +144,30 @@ class MBData():
         -------
         ds_output : pandas dataframe
             dataframe of mass balance observations and other relevant information for calibration 
-        """       
+        """     
+        # Dictionary linking glacier number (glacno) to index for selecting elevation indices
+        glacnodict = dict(zip(main_glac_rgi['rgino_str'], main_glac_rgi.index.values))
         # Column names of output
         ds_output_cols = ['RGIId', 'glacno', 'group_name', 'obs_type', 'mb_mwe', 'mb_mwe_err', 'sla_m',  'z1_idx', 
                           'z2_idx', 'z1', 'z2', 't1_idx', 't2_idx', 't1', 't2', 'area_km2', 'WGMS_ID']
-        # Reset rgi index so it is consistent with hyps and other data
-        main_glac_rgi.reset_index(drop=True, inplace=True)
-        # Dictionary linking glacier number (glacno) to index
-        glacnodict = dict(zip(main_glac_rgi['glacno'], main_glac_rgi.index.values))
-        
-        # Dataset specific calculations
-        if self.name == 'shean':
+        # Avoid group data as processing is slightly different
+        if self.name is not 'group':
             # Load all data
-            ds_all = pd.read_csv(self.ds_fp + self.ds_fn)            
-            ds_all['RegO1'] = ds_all[self.rgi_glacno_cn].values.astype(int)
-            # Select data for specific region
-            ds_reg = ds_all[ds_all['RegO1']==self.rgi_regionO1].copy()
-            ds_reg.reset_index(drop=True, inplace=True)
-            # Glacier number and index for comparison
-            ds_reg['glacno'] = ((ds_reg[self.rgi_glacno_cn] % 1) * 10**5).round(0).astype(int)
-            ds_reg['RGIId'] = ('RGI60-' + str(self.rgi_regionO1) + '.' + 
-                               (ds_reg['glacno'] / 10**5).apply(lambda x: '%.5f' % x).astype(str).str.split('.').str[1])
-            # Select glaciers with mass balance data
-            ds = (ds_reg.iloc[np.where(ds_reg['glacno'].isin(main_glac_rgi['glacno']) == True)[0],:]
-                  ).copy()
+            ds_all = pd.read_csv(self.ds_fp + self.ds_fn)     
+            if str(ds_all.loc[0,self.rgi_glacno_cn]).startswith('RGI'):
+                ds_all['glacno'] = [str(x).split('-')[1] for x in ds_all[self.rgi_glacno_cn].values]
+            else:
+                ds_all['glacno'] = [str(int(x)).zfill(2) + '.' + str(int(np.round(x%1*10**5))).zfill(5) 
+                                    for x in ds_all[self.rgi_glacno_cn]]
+            ds = ds_all.iloc[np.where(ds_all['glacno'].isin(list(main_glac_rgi.rgino_str.values)))[0],:].copy()
             ds.reset_index(drop=True, inplace=True)
             # Elevation indices
             elev_bins = main_glac_hyps.columns.values.astype(int)
             elev_bin_interval = elev_bins[1] - elev_bins[0]
+        
+        # DATASET SPECIFIC CALCULATIONS
+        # ===== SHEAN GEODETIC DATA =====
+        if self.name in ['shean', 'berthier']:
             ds['z1_idx'] = (
                     (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values != 0).argmax(axis=1).astype(int))
             ds['z2_idx'] = (
@@ -193,19 +187,9 @@ class MBData():
             ds['t1_year'] = ds['t1'].astype(int)
             ds['t1_month'] = round(ds['t1'] % ds['t1_year'] * 12 + 1)
             #  add 1 to account for the fact that January starts with value of 1
-#            ds['t1_month'] = (ds['t1'] % ds['t1_year'] * 12 + 1).astype(int)
-#            ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
-#            ds['t1_day'] = ((ds['t1'] % ds['t1_year'] * 12 + 1) % 1 * ds['t1_daysinmonth']).astype(int)
             ds['t2_year'] = ds['t2'].astype(int)
             ds['t2_month'] = round(ds['t2'] % ds['t2_year'] * 12)
              #  do not need to add one for t2 because we want the last full time step
-#            ds['t2_month'] = (ds['t2'] % ds['t2_year'] * 12 + 1).astype(int)
-#            ds['t2_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t2_year'], row['t2_month']), axis=1)
-#            ds['t2_day'] = ((ds['t2'] % ds['t2_year'] * 12 + 1) % 1 * ds['t2_daysinmonth']).astype(int)
-#            ds['t1_datetime'] = pd.to_datetime(
-#                    pd.DataFrame({'year':ds.t1_year.values, 'month':ds.t1_month.values, 'day':ds.t1_day.values}))
-#            ds['t2_datetime'] = pd.to_datetime(
-#                    pd.DataFrame({'year':ds.t2_year.values, 'month':ds.t2_month.values, 'day':ds.t2_day.values}))
             # Remove data with dates outside of calibration period
             year_decimal_min = dates_table.loc[0,'year'] + dates_table.loc[0,'month'] / 12
             year_decimal_max = (dates_table.loc[dates_table.shape[0]-1,'year'] + 
@@ -235,31 +219,65 @@ class MBData():
             ds_addcols = [x for x in ds_output_cols if x not in ds.columns.values]
             for colname in ds_addcols:
                 ds[colname] = np.nan
-#            ds['group_name'] = np.nan
-#            ds['sla_m'] = np.nan
-#            ds['WGMS_ID'] = np.nan
+        
+#        # ===== BERTHIER =====
+#        if self.name == 'berthier':
+#            ds['z1_idx'] = (
+#                    (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values != 0).argmax(axis=1).astype(int))
+#            ds['z2_idx'] = (
+#                    (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values.cumsum(1)).argmax(axis=1).astype(int))
+#            # Lower and upper bin elevations [masl]
+#            ds['z1'] = elev_bins[ds['z1_idx'].values] - elev_bin_interval/2
+#            ds['z2'] = elev_bins[ds['z2_idx'].values] + elev_bin_interval/2
+#            # Area [km2]
+#            ds['area_km2'] = np.nan
+#            for x in range(ds.shape[0]):
+#                ds.loc[x,'area_km2'] = (
+#                        main_glac_hyps.iloc[glacnodict[ds.loc[x,'glacno']], 
+#                                            ds.loc[x,'z1_idx']:ds.loc[x,'z2_idx']+1].sum())
+#            # Time indices
+#            ds['t1'] = ds[self.t1_cn]
+#            ds['t2'] = ds[self.t2_cn]
+#            print(ds)
+#            ds['t1_year'] = ds['t1'].astype(int)
+#            ds['t1_month'] = round(ds['t1'] % ds['t1_year'] * 12 + 1)
+#            #  add 1 to account for the fact that January starts with value of 1
+#            ds['t2_year'] = ds['t2'].astype(int)
+#            ds['t2_month'] = round(ds['t2'] % ds['t2_year'] * 12)
+#             #  do not need to add one for t2 because we want the last full time step
+#            # Remove data with dates outside of calibration period
+#            year_decimal_min = dates_table.loc[0,'year'] + dates_table.loc[0,'month'] / 12
+#            year_decimal_max = (dates_table.loc[dates_table.shape[0]-1,'year'] + 
+#                                (dates_table.loc[dates_table.shape[0]-1,'month'] + 1) / 12)
+#            ds = ds[ds['t1_year'] + ds['t1_month'] / 12 >= year_decimal_min]
+#            ds = ds[ds['t2_year'] + ds['t2_month'] / 12 <= year_decimal_max]
+#            ds.reset_index(drop=True, inplace=True)    
+#            # Determine time indices (exclude spinup years, since massbal fxn discards spinup years)
+#            ds['t1_idx'] = np.nan
+#            ds['t2_idx'] = np.nan
+#            for x in range(ds.shape[0]):
+#                ds.loc[x,'t1_idx'] = (dates_table[(ds.loc[x, 't1_year'] == dates_table['year']) & 
+#                                                  (ds.loc[x, 't1_month'] == dates_table['month'])].index.values[0])
+#                ds.loc[x,'t2_idx'] = (dates_table[(ds.loc[x, 't2_year'] == dates_table['year']) & 
+#                                                  (ds.loc[x, 't2_month'] == dates_table['month'])].index.values[0])
+#            ds['t1_idx'] = ds['t1_idx'].astype(int)
+#            # Specific mass balance [mwea]
+#            print(ds[self.mb_mwea_cn])
+#            ds['mb_mwe'] = ds[self.mb_mwea_cn] * (ds['t2'] - ds['t1'])
+#            ds['mb_mwe_err'] = ds[self.mb_mwea_err_cn] * (ds['t2'] - ds['t1']) 
+#            # Observation type
+#            ds['obs_type'] = 'mb_geo'
+#            # Add columns with nan for things not in list
+#            ds_addcols = [x for x in ds_output_cols if x not in ds.columns.values]
+#            for colname in ds_addcols:
+#                ds[colname] = np.nan
             
+        # ===== BRUN GEODETIC DATA =====
         elif self.name == 'brun':
             print('code brun')
-            
+        
+        # ===== MAUER GEODETIC DATA =====
         elif self.name == 'mauer':
-            # Load all data
-            ds_all = pd.read_csv(self.ds_fp + self.ds_fn)            
-            ds_all['RegO1'] = ds_all[self.rgi_glacno_cn].values.astype(int)
-            # Select data for specific region
-            ds_reg = ds_all[ds_all['RegO1']==self.rgi_regionO1].copy()
-            ds_reg.reset_index(drop=True, inplace=True)
-            # Glacier number and index for comparison
-            ds_reg['glacno'] = ((ds_reg[self.rgi_glacno_cn] % 1) * 10**5).round(0).astype(int)
-            ds_reg['RGIId'] = ('RGI60-' + str(self.rgi_regionO1) + '.' + 
-                               (ds_reg['glacno'] / 10**5).apply(lambda x: '%.5f' % x).astype(str).str.split('.').str[1])
-            # Select glaciers with mass balance data
-            ds = (ds_reg.iloc[np.where(ds_reg['glacno'].isin(main_glac_rgi['glacno']) == True)[0],:]
-                  ).copy()
-            ds.reset_index(drop=True, inplace=True)
-            # Elevation indices
-            elev_bins = main_glac_hyps.columns.values.astype(int)
-            elev_bin_interval = elev_bins[1] - elev_bins[0]
             ds['z1_idx'] = (
                     (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values != 0).argmax(axis=1).astype(int))
             ds['z2_idx'] = (
@@ -303,26 +321,9 @@ class MBData():
             ds['mb_mwe_err'] = ds[self.mb_mwea_err_cn] * (ds['t2'] - ds['t1']) 
             # Observation type
             ds['obs_type'] = 'mb_geo'
-            # Add columns with nan for things not in list
-            ds_addcols = [x for x in ds_output_cols if x not in ds.columns.values]
-            for colname in ds_addcols:
-                ds[colname] = np.nan
         
+        # ===== WGMS GEODETIC DATA =====
         elif self.name == 'wgms_d':
-            # Load all data
-            ds_all = pd.read_csv(self.ds_fp + self.ds_fn, encoding='latin1')
-            ds_all['RegO1'] = ds_all[self.rgi_glacno_cn].values.astype(int)
-            # Select data for specific region
-            ds_reg = ds_all[ds_all['RegO1']==self.rgi_regionO1].copy()
-            # Glacier number and index for comparison
-            ds_reg['glacno'] = ((ds_reg[self.rgi_glacno_cn] % 1) * 10**5).round(0).astype(int)
-            # Select glaciers from those being modeled using main_glac_rgi
-            ds = (ds_reg.iloc[np.where(ds_reg['glacno'].isin(main_glac_rgi[input.rgi_O1Id_colname]) == True)[0],:]
-                  ).copy()
-            ds.reset_index(drop=True, inplace=True)
-            # Elevation indices
-            elev_bins = main_glac_hyps.columns.values.astype(int)
-            elev_bin_interval = elev_bins[1] - elev_bins[0]
             ds['z1_idx'] = np.nan
             ds['z2_idx'] = np.nan
             ds.loc[ds[self.z1_cn] == 9999, 'z1_idx'] = (
@@ -447,28 +448,9 @@ class MBData():
                     (1/1000)**2 * input.density_ice / input.density_water)
             # Observation type
             ds['obs_type'] = 'mb_geo'
-            ds['group_name'] = np.nan
-            ds['sla_m'] = np.nan
+        
+        # ===== WGMS GLACIOLOGICAL DATA =====
         elif self.name == 'wgms_ee':
-            # Load all data
-            ds_all = pd.read_csv(self.ds_fp + self.ds_fn, encoding='latin1')            
-            ds_all['RegO1'] = ds_all[self.rgi_glacno_cn].values.astype(int)
-            # Select data for specific region
-            ds_reg = ds_all[ds_all['RegO1']==self.rgi_regionO1].copy()
-            # Glacier number and index for comparison
-            ds_reg['glacno'] = ((ds_reg[self.rgi_glacno_cn] % 1) * 10**5).round(0).astype(int)
-            # Fill in glaciers without reference data
-            ds_reg.loc[ds_reg.BEGIN_PERIOD.isnull(), 'BEGIN_PERIOD'] = (
-                    (ds_reg.loc[ds_reg.BEGIN_PERIOD.isnull(), 'YEAR'] - 1) * 10**4 + 9999)
-            ds_reg.loc[ds_reg.END_PERIOD.isnull(), 'END_PERIOD'] = (
-                    ds_reg.loc[ds_reg.END_PERIOD.isnull(), 'YEAR'] * 10**4 + 9999)
-            # Select glaciers from those being modeled using main_glac_rgi
-            ds = (ds_reg.iloc[np.where(ds_reg['glacno'].isin(main_glac_rgi[input.rgi_O1Id_colname]) == True)[0],:]
-                  ).copy()
-            ds.reset_index(drop=True, inplace=True)
-            # Elevation indices
-            elev_bins = main_glac_hyps.columns.values.astype(int)
-            elev_bin_interval = elev_bins[1] - elev_bins[0]
             ds['z1_idx'] = np.nan
             ds['z2_idx'] = np.nan
             ds.loc[ds[self.z1_cn] == 9999, 'z1_idx'] = (
@@ -499,6 +481,10 @@ class MBData():
             # Time indices
             #  winter and summer balances typically have the same data for 'BEGIN_PERIOD' and 'END_PERIOD' as the annual
             #  measurements, so need to set these dates manually
+            # Remove glaciers without begin or end period
+            ds = ds.drop(np.where(np.isnan(ds['BEGIN_PERIOD'].values))[0].tolist(), axis=0)
+            ds = ds.drop(np.where(np.isnan(ds['END_PERIOD'].values))[0].tolist(), axis=0)
+            ds.reset_index(drop=True, inplace=True)
             ds['t1_year'] = ds['BEGIN_PERIOD'].astype(str).str.split('.').str[0].str[:4].astype(int)
             ds['t1_month'] = ds['BEGIN_PERIOD'].astype(str).str.split('.').str[0].str[4:6].astype(int)
             ds['t1_day'] = ds['BEGIN_PERIOD'].astype(str).str.split('.').str[0].str[6:].astype(int)
@@ -595,24 +581,9 @@ class MBData():
 #                               / 10**9)
             # Observation type
             ds['obs_type'] = 'mb_glac'
-            ds['group_name'] = np.nan
-            ds['sla_m'] = np.nan
             
+        # ===== WGMS GLACIOLOGICAL DATA =====
         elif self.name == 'cogley':
-            # Load all data
-            ds_all = pd.read_csv(self.ds_fp + self.ds_fn, encoding='latin1')
-            ds_all['RegO1'] = ds_all[self.rgi_glacno_cn].values.astype(int)
-            # Select data for specific region
-            ds_reg = ds_all[ds_all['RegO1']==self.rgi_regionO1].copy()
-            # Glacier number and index for comparison
-            ds_reg['glacno'] = ((ds_reg[self.rgi_glacno_cn] % 1) * 10**5).round(0).astype(int)
-            # Select glaciers from those being modeled using main_glac_rgi
-            ds = (ds_reg.iloc[np.where(ds_reg['glacno'].isin(main_glac_rgi[input.rgi_O1Id_colname]) == True)[0],:]
-                  ).copy()
-            ds.reset_index(drop=True, inplace=True)
-            # Elevation indices
-            elev_bins = main_glac_hyps.columns.values.astype(int)
-            elev_bin_interval = elev_bins[1] - elev_bins[0]
             ds['z1_idx'] = np.nan
             ds['z2_idx'] = np.nan
             ds.loc[ds[self.z1_cn] == 9999, 'z1_idx'] = (
@@ -706,8 +677,63 @@ class MBData():
             ds['mb_mwe_err'] = ds[self.mass_chg_err_cn] / input.density_water * (ds['t2'] - ds['t1'])
             # Observation type
             ds['obs_type'] = 'mb_geo'
-            ds['group_name'] = np.nan
             
+        # ===== LARSEN OR MCNABB GEODETIC MASS BALANCE =====
+        elif self.name == 'mcnabb' or self.name == 'larsen': 
+            ds['z1_idx'] = (
+                    (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values != 0).argmax(axis=1).astype(int))
+            ds['z2_idx'] = (
+                    (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values.cumsum(1)).argmax(axis=1).astype(int))
+            # Lower and upper bin elevations [masl]
+            ds['z1'] = elev_bins[ds['z1_idx'].values] - elev_bin_interval/2
+            ds['z2'] = elev_bins[ds['z2_idx'].values] + elev_bin_interval/2
+            # Area [km2]
+            ds['area_km2'] = np.nan
+            for x in range(ds.shape[0]):
+                ds.loc[x,'area_km2'] = (
+                        main_glac_hyps.iloc[glacnodict[ds.loc[x,'glacno']], 
+                                            ds.loc[x,'z1_idx']:ds.loc[x,'z2_idx']+1].sum())
+            # Time
+            ds['t1_year'] = [int(str(x)[0:4]) for x in ds[self.t1_cn].values]
+            ds['t1_month'] = [int(str(x)[4:6]) for x in ds[self.t1_cn].values]
+            ds['t1_day'] = [int(str(x)[6:]) for x in ds[self.t1_cn].values]
+            ds['t2_year'] = [int(str(x)[0:4]) for x in ds[self.t2_cn].values]
+            ds['t2_month'] = [int(str(x)[4:6]) for x in ds[self.t2_cn].values]
+            ds['t2_day'] = [int(str(x)[6:]) for x in ds[self.t2_cn].values]                           
+            ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
+            ds['t2_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t2_year'], row['t2_month']), axis=1)
+            ds['t1_datetime'] = pd.to_datetime(
+                    pd.DataFrame({'year':ds.t1_year.values, 'month':ds.t1_month.values, 'day':ds.t1_day.values}))
+            ds['t2_datetime'] = pd.to_datetime(
+                    pd.DataFrame({'year':ds.t2_year.values, 'month':ds.t2_month.values, 'day':ds.t2_day.values}))
+            ds['t1'] = ds['t1_year'] + (ds['t1_month'] + ds['t1_day'] / ds['t1_daysinmonth']) / 12
+            ds['t2'] = ds['t2_year'] + (ds['t2_month'] + ds['t2_day'] / ds['t2_daysinmonth']) / 12
+            # Remove data with dates outside of calibration period
+            year_decimal_min = dates_table.loc[0,'year'] + dates_table.loc[0,'month'] / 12
+            year_decimal_max = (dates_table.loc[dates_table.shape[0]-1,'year'] + 
+                                (dates_table.loc[dates_table.shape[0]-1,'month'] + 1) / 12)
+            ds = ds[ds['t1_year'] + ds['t1_month'] / 12 >= year_decimal_min]
+            ds = ds[ds['t2_year'] + ds['t2_month'] / 12 < year_decimal_max]
+            ds.reset_index(drop=True, inplace=True)    
+            # Determine time indices (exclude spinup years, since massbal fxn discards spinup years)
+            ds['t1_idx'] = np.nan
+            ds['t2_idx'] = np.nan
+            for x in range(ds.shape[0]):
+                ds.loc[x,'t1_idx'] = (dates_table[(ds.loc[x, 't1_year'] == dates_table['year']) & 
+                                                  (ds.loc[x, 't1_month'] == dates_table['month'])].index.values[0])
+                ds.loc[x,'t2_idx'] = (dates_table[(ds.loc[x, 't2_year'] == dates_table['year']) & 
+                                                  (ds.loc[x, 't2_month'] == dates_table['month'])].index.values[0])
+            ds['t1_idx'] = ds['t1_idx'].astype(int)
+            # Specific mass balance [mwea]
+            ds['mb_mwe'] = ds[self.mb_mwea_cn] * (ds['t2'] - ds['t1'])
+            ds['mb_mwe_err'] = ds[self.mb_mwea_err_cn] * (ds['t2'] - ds['t1']) 
+            # Total mass change [Gt]
+#            ds['mb_gt'] = ds[self.mb_vol_cn] * (ds['t2'] - ds['t1']) * (1/1000)**3 * input.density_water / 1000
+#            ds['mb_gt_err'] = ds[self.mb_vol_err_cn] * (ds['t2'] - ds['t1']) * (1/1000)**3 * input.density_water / 1000
+            # Observation type
+            ds['obs_type'] = 'mb_geo'
+        
+        # ====== GROUP DATA ======
         elif self.name == 'group':
             # Load all data
             ds_all = pd.read_csv(self.ds_fp + self.ds_fn, encoding='latin1')
@@ -796,92 +822,16 @@ class MBData():
             ds.loc[ds['dhdt_ma'].notnull(), 'mb_mwe_err'] = (
                     ds.loc[ds['dhdt_ma'].notnull(), 'dhdt_unc_ma'] * input.density_ice / input.density_water * 
                     (ds['t2'] - ds['t1']))
-            
-            # Add columns for consistency with individual glacier observations
-            ds['RGIId'] = np.nan
-            ds['glacno'] = np.nan
-            ds['sla_m'] = np.nan
-            ds['z1_idx'] = np.nan
-            ds['z2_idx'] = np.nan
-            ds['z1'] = np.nan
-            ds['z2'] = np.nan
-            ds['WGMS_ID'] = np.nan
-            
-        elif self.name == 'mcnabb' or self.name == 'larsen': 
-            # Load all data
-            ds_all = pd.read_csv(self.ds_fp + self.ds_fn)                  
-            ds_all['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds_all[self.rgiid].values]
-            # Select data for specific region
-            ds_reg = ds_all[ds_all['RegO1']==self.rgi_regionO1].copy()
-            ds_reg.reset_index(drop=True, inplace=True)
-            # Glacier number and index for comparison
-            ds_reg['glacno'] = [int(x.split('-')[1].split('.')[1]) for x in ds_all[self.rgiid].values]
-            # Select glaciers with mass balance data
-            ds = (ds_reg.iloc[np.where(ds_reg['glacno'].isin(main_glac_rgi['glacno']) == True)[0],:]
-                  ).copy()
-            ds.reset_index(drop=True, inplace=True)
-            # Elevation indices
-            elev_bins = main_glac_hyps.columns.values.astype(int)
-            elev_bin_interval = elev_bins[1] - elev_bins[0]
-            ds['z1_idx'] = (
-                    (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values != 0).argmax(axis=1).astype(int))
-            ds['z2_idx'] = (
-                    (main_glac_hyps.iloc[ds['glacno'].map(glacnodict)].values.cumsum(1)).argmax(axis=1).astype(int))
-            # Lower and upper bin elevations [masl]
-            ds['z1'] = elev_bins[ds['z1_idx'].values] - elev_bin_interval/2
-            ds['z2'] = elev_bins[ds['z2_idx'].values] + elev_bin_interval/2
-            # Area [km2]
-            ds['area_km2'] = np.nan
-            for x in range(ds.shape[0]):
-                ds.loc[x,'area_km2'] = (
-                        main_glac_hyps.iloc[glacnodict[ds.loc[x,'glacno']], 
-                                            ds.loc[x,'z1_idx']:ds.loc[x,'z2_idx']+1].sum())
-            # Time
-            ds['t1_year'] = [int(str(x)[0:4]) for x in ds[self.t1_cn].values]
-            ds['t1_month'] = [int(str(x)[4:6]) for x in ds[self.t1_cn].values]
-            ds['t1_day'] = [int(str(x)[6:]) for x in ds[self.t1_cn].values]
-            ds['t2_year'] = [int(str(x)[0:4]) for x in ds[self.t2_cn].values]
-            ds['t2_month'] = [int(str(x)[4:6]) for x in ds[self.t2_cn].values]
-            ds['t2_day'] = [int(str(x)[6:]) for x in ds[self.t2_cn].values]                           
-            ds['t1_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t1_year'], row['t1_month']), axis=1)
-            ds['t2_daysinmonth'] = ds.apply(lambda row: modelsetup.daysinmonth(row['t2_year'], row['t2_month']), axis=1)
-            ds['t1_datetime'] = pd.to_datetime(
-                    pd.DataFrame({'year':ds.t1_year.values, 'month':ds.t1_month.values, 'day':ds.t1_day.values}))
-            ds['t2_datetime'] = pd.to_datetime(
-                    pd.DataFrame({'year':ds.t2_year.values, 'month':ds.t2_month.values, 'day':ds.t2_day.values}))
-            ds['t1'] = ds['t1_year'] + (ds['t1_month'] + ds['t1_day'] / ds['t1_daysinmonth']) / 12
-            ds['t2'] = ds['t2_year'] + (ds['t2_month'] + ds['t2_day'] / ds['t2_daysinmonth']) / 12
-            # Remove data with dates outside of calibration period
-            year_decimal_min = dates_table.loc[0,'year'] + dates_table.loc[0,'month'] / 12
-            year_decimal_max = (dates_table.loc[dates_table.shape[0]-1,'year'] + 
-                                (dates_table.loc[dates_table.shape[0]-1,'month'] + 1) / 12)
-            ds = ds[ds['t1_year'] + ds['t1_month'] / 12 >= year_decimal_min]
-            ds = ds[ds['t2_year'] + ds['t2_month'] / 12 < year_decimal_max]
-            ds.reset_index(drop=True, inplace=True)    
-            # Determine time indices (exclude spinup years, since massbal fxn discards spinup years)
-            ds['t1_idx'] = np.nan
-            ds['t2_idx'] = np.nan
-            for x in range(ds.shape[0]):
-                ds.loc[x,'t1_idx'] = (dates_table[(ds.loc[x, 't1_year'] == dates_table['year']) & 
-                                                  (ds.loc[x, 't1_month'] == dates_table['month'])].index.values[0])
-                ds.loc[x,'t2_idx'] = (dates_table[(ds.loc[x, 't2_year'] == dates_table['year']) & 
-                                                  (ds.loc[x, 't2_month'] == dates_table['month'])].index.values[0])
-            ds['t1_idx'] = ds['t1_idx'].astype(int)
-            # Specific mass balance [mwea]
-            ds['mb_mwe'] = ds[self.mb_mwea_cn] * (ds['t2'] - ds['t1'])
-            ds['mb_mwe_err'] = ds[self.mb_mwea_err_cn] * (ds['t2'] - ds['t1']) 
-            # Total mass change [Gt]
-#            ds['mb_gt'] = ds[self.mb_vol_cn] * (ds['t2'] - ds['t1']) * (1/1000)**3 * input.density_water / 1000
-#            ds['mb_gt_err'] = ds[self.mb_vol_err_cn] * (ds['t2'] - ds['t1']) * (1/1000)**3 * input.density_water / 1000
-            # Observation type
-            ds['obs_type'] = 'mb_geo'
-            # Add columns with nan for things not in list
-            ds_addcols = [x for x in ds_output_cols if x not in ds.columns.values]
-            for colname in ds_addcols:
-                ds[colname] = np.nan
+        
+        
+        # Add columns with nan for things not in list
+        ds_addcols = [x for x in ds_output_cols if x not in ds.columns.values]
+        for colname in ds_addcols:
+            ds[colname] = np.nan
         # Select output
         ds_output = ds[ds_output_cols].sort_values(['glacno', 't1_idx'])
         ds_output.reset_index(drop=True, inplace=True)
+
         return ds_output
 
 
@@ -890,124 +840,128 @@ if __name__ == '__main__':
     # Glacier selection
     rgi_regionsO1 = [1]
     rgi_glac_number = 'all'
-    startyear = 1980
-    endyear = 2017
+    glac_no = input.glac_no
+    startyear = 1950
+    endyear = 2018
     
     # Select glaciers
     main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=rgi_regionsO1, rgi_regionsO2 = 'all', 
-                                                      rgi_glac_number=rgi_glac_number)
+                                                      rgi_glac_number=rgi_glac_number, glac_no=input.glac_no)
     # Glacier hypsometry [km**2], total area
-    main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, rgi_regionsO1, input.hyps_filepath, 
-                                                 input.hyps_filedict, input.hyps_colsdrop)
+    main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, input.hyps_filepath, input.hyps_filedict, 
+                                                 input.hyps_colsdrop)
     # Determine dates_table_idx that coincides with data
-    dates_table = modelsetup.datesmodelrun(startyear, endyear, spinupyears=0)
+    dates_table = modelsetup.datesmodelrun(startyear, endyear, spinupyears=0, option_wateryear=3)
     
     elev_bins = main_glac_hyps.columns.values.astype(int)
     elev_bin_interval = elev_bins[1] - elev_bins[0]
     
 #    # Testing    
-#    mb1 = MBData(name='larsen', rgi_regionO1=rgi_regionsO1[0])
-##    mb1 = MBData(name='mauer', rgi_regionO1=rgi_regionsO1[0])
-##    mb1 = MBData(name='cogley', rgi_regionO1=rgi_regionsO1[0])
+#    mb1 = MBData(name='larsen')
+##    mb1 = MBData(name='mauer')
+##    mb1 = MBData(name='cogley')
 #    ds_output = mb1.retrieve_mb(main_glac_rgi, main_glac_hyps, dates_table)
     
     #%%
-    cal_datasets = ['mcnabb']
-#    cal_datasets = ['wgms_d', 'wgms_ee', 'group']
-#    cal_datasets = ['shean']
-##    cal_datasets = ['wgms_ee']
-##    cal_datasets = ['wgms_d']
-##    cal_datasets = ['group']
+#    cal_datasets = ['shean'] 
+    cal_datasets = ['berthier']
+#    cal_datasets = ['shean', 'mauer', 'wgms_d', 'wgms_ee', 'cogley', 'mcnabb', 'larsen']
+#    cal_datasets = ['group']
     
     cal_data = pd.DataFrame()
     for dataset in cal_datasets:
-        cal_subset = MBData(name=dataset, rgi_regionO1=rgi_regionsO1[0])
+        print(dataset)
+        cal_subset = MBData(name=dataset)
         cal_subset_data = cal_subset.retrieve_mb(main_glac_rgi, main_glac_hyps, dates_table)
         cal_data = cal_data.append(cal_subset_data, ignore_index=True)
     cal_data = cal_data.sort_values(['glacno', 't1_idx'])
     cal_data.reset_index(drop=True, inplace=True)
     
-    #%%
-    # Count unique glaciers and fraction of total area
-    rgiid_unique = list(cal_data.RGIId.unique())
-    rgiid_unique_idx = []
-    for rgiid in rgiid_unique:
-        rgiid_unique_idx.append(np.where(main_glac_rgi.RGIId.values == rgiid)[0][0])
-    print('Glacier area covered: ', np.round(main_glac_rgi.loc[rgiid_unique_idx, 'Area'].sum() / 
-                                             main_glac_rgi['Area'].sum() * 100,1),'%')
-
-#%% PRE-PROCESS MCNABB DATA
-#    # Remove glaciers that:
-#    #  (1) poor percent coverage
-#    #  (2) uncertainty is too high
-#    # Glacier selection
-#    rgi_regionsO1 = [1]
-#    rgi_glac_number = 'all'
-#    startyear = 1980
-#    endyear = 2017
-#    
-#    density_ice_brun = 850
-#    
-#    mcnabb_fn = 'Alaska_dV_17jun.csv'
-#    
-#    # Select glaciers
-#    main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=rgi_regionsO1, rgi_regionsO2 = 'all', 
-#                                                      rgi_glac_number=rgi_glac_number)
-#    # Load data
-#    ds_raw = pd.read_csv(input.mcnabb_fp + mcnabb_fn)
-#    
-#    # remove data with poor coverage
-#    ds1 = ds_raw[ds_raw['pct_data'] > 0.75].copy()
-#    ds1.reset_index(drop=True, inplace=True)
-#    
-#    # remove glaciers with too high uncertainty (> 1.96 stdev)
-#    uncertainty_median = ds1.e_dh.median()
-#    ds1['e_mad'] = np.absolute(ds1['e_dh'] - uncertainty_median)
-#    uncertainty_mad = np.median(ds1['e_mad'])
-#    print('uncertainty median and mad [m/yr]:', np.round(uncertainty_median,2), np.round(uncertainty_mad,2))
-#    ds2 = ds1[ds1['e_dh'] < uncertainty_median + 3*uncertainty_mad].copy()
-#    ds2.reset_index(drop=True, inplace=True)
-#    print('Glaciers removed (too high uncertainty):', ds1.shape[0] - ds2.shape[0], 'points')
-#
-#    # Minimum and maximum mass balances
-##    print(ds2.loc[np.where(ds2.smb.values == ds2.smb.max())[0][0],'smb'], 
-##          ds2.loc[np.where(ds2.smb.values == ds2.smb.max())[0][0],'e_dh'])
-##    print(ds2.loc[np.where(ds2.smb.values == ds2.smb.min())[0][0],'smb'], 
-##          ds2.loc[np.where(ds2.smb.values == ds2.smb.min())[0][0],'e_dh'])
-#    
-#    ds2.sort_values('RGIId')
-#    ds2.reset_index(drop=True, inplace=True)
-#    
+#    #%%
 #    # Count unique glaciers and fraction of total area
-#    rgiid_unique = list(ds2.RGIId.unique())
+#    rgiid_unique = list(cal_data.RGIId.unique())
 #    rgiid_unique_idx = []
 #    for rgiid in rgiid_unique:
 #        rgiid_unique_idx.append(np.where(main_glac_rgi.RGIId.values == rgiid)[0][0])
 #    print('Glacier area covered: ', np.round(main_glac_rgi.loc[rgiid_unique_idx, 'Area'].sum() / 
 #                                             main_glac_rgi['Area'].sum() * 100,1),'%')
+
+#%% PRE-PROCESS MCNABB DATA
+#    # Remove glaciers that:
+#    #  (1) poor percent coverage
+#    #  (2) uncertainty is too hig
 #    
-#    rgiid_values = list(ds2.RGIId.values)
-#    rgiid_idx = []
-#    for rgiid in rgiid_values:
-#        rgiid_idx.append(np.where(main_glac_rgi.RGIId.values == rgiid)[0][0])
-#    ds2['CenLat'] = main_glac_rgi.loc[rgiid_idx, 'CenLat'].values
-#    ds2['CenLon'] = main_glac_rgi.loc[rgiid_idx, 'CenLon'].values
+#    density_ice_brun = 850
 #    
-#    ds2['mb_mwea'] = ds2['smb'] * density_ice_brun / input.density_water
-#    ds2['mb_mwea_sigma'] = ds2['e_dh'] * density_ice_brun / input.density_water
+#    mcnabb_fn = 'McNabb_data_all_raw.csv'
+#    output_fn = 'McNabb_data_all_preprocessed.csv'
 #    
+#    # Load data
+#    ds_raw = pd.read_csv(input.mcnabb_fp + mcnabb_fn)
+#    ds_raw['glacno_str'] = [x.split('-')[1] for x in ds_raw.RGIId.values]
+#    ds_raw['mb_mwea'] = ds_raw['smb'] * density_ice_brun / input.density_water
+#    ds_raw['mb_mwea_sigma'] = ds_raw['e_dh'] * density_ice_brun / input.density_water
+#    nraw = ds_raw.shape[0]
+#    
+#    # remove data with poor coverage
+#    ds = ds_raw[ds_raw['pct_data'] > 0.75].copy()
+#    ds.reset_index(drop=True, inplace=True)
+#    nraw_goodcoverage = ds.shape[0]
+#    print('Glaciers removed (poor coverage):', nraw - nraw_goodcoverage, 'points')
+#    
+#    # remove glaciers with too high uncertainty (> 1.96 stdev)
+#    uncertainty_median = ds.e_dh.median()
+#    ds['e_mad'] = np.absolute(ds['e_dh'] - uncertainty_median)
+#    uncertainty_mad = np.median(ds['e_mad'])
+#    print('uncertainty median and mad [m/yr]:', np.round(uncertainty_median,2), np.round(uncertainty_mad,2))
+#    ds = ds[ds['e_dh'] < uncertainty_median + 3*uncertainty_mad].copy()
+#    ds = ds.sort_values('RGIId')
+#    ds.reset_index(drop=True, inplace=True)
+#    print('Glaciers removed (too high uncertainty):', nraw_goodcoverage - ds.shape[0], 'points')
+#    
+#    # Select glaciers
+#    glac_no = sorted(set(ds['glacno_str'].values))
+#    main_glac_rgi = modelsetup.selectglaciersrgitable(glac_no=glac_no)
+#    
+#    # Count unique glaciers and fraction of total area
+#    print('Glacier area covered: ', np.round(main_glac_rgi['Area'].sum(),1),'km2')
+#    
+##    # All values
+##    rgiid_values = list(ds.RGIId.values)
+##    rgiid_idx = []
+##    for rgiid in rgiid_values:
+##        rgiid_idx.append(np.where(main_glac_rgi.RGIId.values == rgiid)[0][0])
+##    ds['CenLat'] = main_glac_rgi.loc[rgiid_idx, 'CenLat'].values
+##    ds['CenLon'] = main_glac_rgi.loc[rgiid_idx, 'CenLon'].values
+#
+#
+#    # Only longest value
+#    ds_output = pd.DataFrame(np.zeros((len(glac_no), ds.shape[1])), columns=ds.columns)
+#    for nglac, glacno in enumerate(glac_no):
+#        ds_subset = ds.loc[np.where(ds.glacno_str.values == glacno)[0],:]
+#        ds_subset.reset_index(inplace=True)
+#        ds_output.loc[nglac,:] = (
+#                ds_subset.loc[np.where(ds_subset['pct_data'].values == ds_subset['pct_data'].max())[0][0],:])
+#        
+#    # Minimum and maximum mass balances
+#    print('Max MB:', np.round(ds_output.loc[np.where(ds_output.smb.values == ds_output.smb.max())[0][0],'smb'],2), 
+#          '+/-',  np.round(ds_output.loc[np.where(ds_output.smb.values == ds_output.smb.max())[0][0],'e_dh'],2))
+#    print('Min MB:', np.round(ds_output.loc[np.where(ds_output.smb.values == ds_output.smb.min())[0][0],'smb'],2), 
+#          '+/-', np.round(ds_output.loc[np.where(ds_output.smb.values == ds_output.smb.min())[0][0],'e_dh'],2))
+#
 #    # Adjust date to YYYYMMDD format
-#    ds2['y0'] = [str(x.split('-')[0]) for x in ds2['date0'].values]
-#    ds2['m0'] = [str(x.split('-')[1]) for x in ds2['date0'].values]
-#    ds2['d0'] = [str(x.split('-')[2]) for x in ds2['date0'].values]
-#    ds2['y1'] = [str(x.split('-')[0]) for x in ds2['date1'].values]
-#    ds2['m1'] = [str(x.split('-')[1]) for x in ds2['date1'].values]
-#    ds2['d1'] = [str(x.split('-')[2]) for x in ds2['date1'].values]
-#    ds2['date0'] = ds2['y0'] + ds2['m0'] + ds2['d0']
-#    ds2['date1'] = ds2['y1'] + ds2['m1'] + ds2['d1']
-#    ds2.drop(['y0', 'm0', 'd0', 'y1', 'm1', 'd1'], axis=1, inplace=True)
+#    print('\nCHECK ALL YEARS AFTER IN 2000s\n')
+#    ds_output['y0'] = ['20' + str(x.split('/')[2]).zfill(2) for x in ds_output['date0'].values]
+#    ds_output['m0'] = [str(x.split('/')[0]).zfill(2) for x in ds_output['date0'].values]
+#    ds_output['d0'] = [str(x.split('/')[1]).zfill(2) for x in ds_output['date0'].values]
+#    ds_output['y1'] = ['20' + str(x.split('/')[2]).zfill(2) for x in ds_output['date1'].values]
+#    ds_output['m1'] = [str(x.split('/')[0]).zfill(2) for x in ds_output['date1'].values]
+#    ds_output['d1'] = [str(x.split('/')[1]).zfill(2) for x in ds_output['date1'].values]
+#    ds_output['date0'] = ds_output['y0'] + ds_output['m0'] + ds_output['d0']
+#    ds_output['date1'] = ds_output['y1'] + ds_output['m1'] + ds_output['d1']
+#    ds_output.drop(['y0', 'm0', 'd0', 'y1', 'm1', 'd1'], axis=1, inplace=True)
 #    
-#    ds2.to_csv(input.mcnabb_fp + mcnabb_fn.replace('.csv','_preprocessed.csv'))
+#    ds_output.to_csv(input.mcnabb_fp + output_fn)
     
 
 #%%
@@ -1067,12 +1021,12 @@ if __name__ == '__main__':
 #    main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=[region], rgi_regionsO2 = 'all', 
 #                                                      rgi_glac_number=rgi_glac_number)
 #    # Glacier hypsometry [km**2], total area
-#    main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, [region], input.hyps_filepath, 
+#    main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, input.hyps_filepath, 
 #                                                 input.hyps_filedict, input.hyps_colsdrop)
 #    # Determine dates_table_idx that coincides with data
 #    dates_table = modelsetup.datesmodelrun(1970, 2017, spinupyears=0)
 #    
 #    
 #    # Select mass balance data
-#    mb1 = MBData(name='mauer', rgi_regionO1=region)
+#    mb1 = MBData(name='mauer')
 #    ds_mb = mb1.retrieve_mb(main_glac_rgi, main_glac_hyps, dates_table)

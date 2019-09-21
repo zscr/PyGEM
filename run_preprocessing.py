@@ -22,7 +22,7 @@ import pygem_input as input
 import pygemfxns_modelsetup as modelsetup
 import pygemfxns_massbalance as massbalance
 import class_climate
-
+from analyze_mcmc import load_glacierdata_byglacno
 
 
 #%% TO-DO LIST:
@@ -48,6 +48,8 @@ def getparser():
     # add arguments
     parser.add_argument('-option_createlapserates', action='store', type=int, default=0,
                         help='option to create lapse rates or not (1=yes, 0=no)')
+    parser.add_argument('-option_createtempstd', action='store', type=int, default=0,
+                        help='option to create temperature std of daily data or not (1=yes, 0=no)')
     parser.add_argument('-option_wgms', action='store', type=int, default=0,
                         help='option to pre-process wgms data (1=yes, 0=no)')
     parser.add_argument('-option_coawstmerge', action='store', type=int, default=0,
@@ -56,6 +58,10 @@ def getparser():
                         help='option to fill in missing mass balance data with regional mean and std (1=yes, 0=no)')
     parser.add_argument('-option_frontalablation_cal', action='store', type=int, default=0,
                         help='option to calibrate frontal ablation for a glacier')
+    parser.add_argument('-option_farinotti2019_input', action='store', type=int, default=0,
+                        help='option to produce Farinotti 2019 input products (1=yes, 0=no)')
+    parser.add_argument('-option_mbdata_regional', action='store', type=int, default=0,
+                        help='option to analzye mass balance data from various sources (1=yes, 0=no)')
     return parser
 
 parser = getparser()
@@ -70,6 +76,171 @@ args = parser.parse_args()
 #    main_glac_rgi_all = main_glac_rgi_all.append(main_glac_rgi_region)
 
 
+#%%
+if args.option_mbdata_regional == 1:
+    option_alaska = 0
+    option_iceland = 0
+    option_svalbard = 0
+    option_russianarctic = 0
+    option_andes = 0
+    
+    option_wgms = 1
+    
+    if option_wgms == 1:
+        ds_wgms = pd.read_csv(input.wgms_fp + input.wgms_d_fn_preprocessed)
+        ds_wgms = ds_wgms.sort_values('RGIId', ascending=True)
+        ds_wgms.reset_index(drop=True, inplace=True)
+        ds_wgms['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds_wgms.RGIId.values]
+        ds_wgms['glacno'] = [x.split('-')[1] for x in ds_wgms.RGIId.values]
+        region_list = sorted(list(ds_wgms.RegO1.unique()))
+        
+        for region in region_list:
+            print(region)
+            ds_region = ds_wgms.loc[np.where(ds_wgms.RegO1 == region)[0]]
+            glacno_list_wgms = sorted(list(ds_region.glacno.unique()))
+            main_glac_rgi_wgms = load_glacierdata_byglacno(glacno_list_wgms, option_loadhyps_climate=0, 
+                                                           option_loadcal_data=0)
+            
+            print('Region ' + str(region) + ':',
+                  '\n Count:', str(ds_region.shape[0]),
+                  '\n Glacier Area [km2]:', str(main_glac_rgi_wgms.Area.sum()))
+                  
+    
+    if option_alaska == 1:
+        ds_fp = input.main_directory + '/../DEMs/McNabb_data/wgms_dv/'
+        ds_fn1 = 'Alaska_dV_17jun.csv'
+        ds_fn2 = 'BrooksRange_dV_17jun.csv'
+        
+        ds1 = pd.read_csv(ds_fp + ds_fn1)
+        ds2 = pd.read_csv(ds_fp + ds_fn2)
+        ds = ds1.append(ds2)
+        ds = ds.sort_values('RGIId', ascending=True)
+        # remove nan values
+        ds = (ds.drop(np.where(np.isnan(ds['smb'].values) == True)[0].tolist(), axis=0))   
+        ds.reset_index(drop=True, inplace=True)
+        ds['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds.RGIId.values]
+        ds['glacno'] = [x.split('-')[1] for x in ds.RGIId.values]
+        glacno_list1 = sorted(list(ds.glacno.unique()))
+        
+        # Add Larsen
+        ds3 = pd.read_csv(input.larsen_fp + input.larsen_fn)
+        ds3 = (ds3.drop(np.where(np.isnan(ds3['mb_mwea'].values) == True)[0].tolist(), axis=0))   
+        ds3.reset_index(drop=True, inplace=True)
+        ds3['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds3.RGIId.values]
+        ds3['glacno'] = [x.split('-')[1] for x in ds3.RGIId.values]
+        glacno_list2 = sorted(list(ds3.glacno.unique()))
+        
+        glacno_list = glacno_list1 + glacno_list2
+        glacno_list = sorted(list(set(glacno_list)))
+        
+        main_glac_rgi = load_glacierdata_byglacno(glacno_list, option_loadhyps_climate=0, option_loadcal_data=0)
+        
+        print('\nRegion 1:')
+        print('Count:', main_glac_rgi.shape[0], '(' + str(np.round(main_glac_rgi.shape[0] / 27108*100, 1)) + '%)')
+        print('Glacier Area [km2]:', np.round(main_glac_rgi.Area.sum(),1), '(' + 
+               str(np.round(main_glac_rgi.Area.sum() / 86725.053 * 100,1)) + '%)')
+    
+    if option_iceland == 1:
+        ds_fp = input.main_directory + '/../DEMs/McNabb_data/wgms_dv/'
+        ds_fn = 'Iceland_dV_29jun.csv'
+        
+        ds = pd.read_csv(ds_fp + ds_fn)
+        ds = ds.sort_values('RGIId', ascending=True)
+        # remove nan values
+        ds = (ds.drop(np.where(np.isnan(ds['smb'].values) == True)[0].tolist(), axis=0))   
+        ds.reset_index(drop=True, inplace=True)
+        ds['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds.RGIId.values]
+        ds['glacno'] = [x.split('-')[1] for x in ds.RGIId.values]
+        glacno_list = sorted(list(ds.glacno.unique()))
+        
+        main_glac_rgi = load_glacierdata_byglacno(glacno_list, option_loadhyps_climate=0, option_loadcal_data=0)
+        
+        print('\nRegion 6:')
+        print('Count:', main_glac_rgi.shape[0], '(' + str(np.round(main_glac_rgi.shape[0] / 568*100, 1)) + '%)')
+        print('Glacier Area [km2]:', np.round(main_glac_rgi.Area.sum(),1), '(' + 
+               str(np.round(main_glac_rgi.Area.sum() / 11059.7 * 100,1)) + '%)')
+        
+    if option_svalbard == 1:
+        ds_fp = input.main_directory + '/../DEMs/McNabb_data/wgms_dv/'
+        ds_fn1 = 'Svalbard_dV_29jun.csv'
+        ds_fn2 = 'JanMayen_dV_29jun.csv'
+        
+        ds1 = pd.read_csv(ds_fp + ds_fn1)
+        ds2 = pd.read_csv(ds_fp + ds_fn2)
+        ds = ds1.append(ds2)
+        ds = ds.sort_values('RGIId', ascending=True)
+        # remove nan values
+        ds = (ds.drop(np.where(np.isnan(ds['smb'].values) == True)[0].tolist(), axis=0))   
+        ds.reset_index(drop=True, inplace=True)
+        ds['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds.RGIId.values]
+        ds['glacno'] = [x.split('-')[1] for x in ds.RGIId.values]
+        glacno_list = sorted(list(ds.glacno.unique()))
+        
+        main_glac_rgi = load_glacierdata_byglacno(glacno_list, option_loadhyps_climate=0, option_loadcal_data=0)
+        
+        print('\nRegion 7:')
+        print('Count:', main_glac_rgi.shape[0], '(' + str(np.round(main_glac_rgi.shape[0] / 1615*100, 1)) + '%)')
+        print('Glacier Area [km2]:', np.round(main_glac_rgi.Area.sum(),1), '(' + 
+               str(np.round(main_glac_rgi.Area.sum() / 33958.934 * 100,1)) + '%)')
+        
+    if option_russianarctic == 1:
+        ds_fp = input.main_directory + '/../DEMs/McNabb_data/wgms_dv/'
+        ds_fn1 = 'FranzJosefLand_17jun.csv'
+        ds_fn2 = 'NovayaZemlya_dV_17jun.csv'
+        ds_fn3 = 'SevernayaZemlya_dV_17jun.csv'
+        
+        ds1 = pd.read_csv(ds_fp + ds_fn1)
+        ds2 = pd.read_csv(ds_fp + ds_fn2)
+        ds3 = pd.read_csv(ds_fp + ds_fn3)
+        ds = ds1.append(ds2)
+        ds = ds.append(ds3)
+        ds = ds.sort_values('RGIId', ascending=True)
+        # remove nan values
+        ds = (ds.drop(np.where(np.isnan(ds['smb'].values) == True)[0].tolist(), axis=0))   
+        ds.reset_index(drop=True, inplace=True)
+        ds['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds.RGIId.values]
+        ds['glacno'] = [x.split('-')[1] for x in ds.RGIId.values]
+        glacno_list = sorted(list(ds.glacno.unique()))
+        
+        main_glac_rgi = load_glacierdata_byglacno(glacno_list, option_loadhyps_climate=0, option_loadcal_data=0)
+        
+        print('\nRegion 9:')
+        print('Count:', main_glac_rgi.shape[0], '(' + str(np.round(main_glac_rgi.shape[0] / 1069*100, 1)) + '%)')
+        print('Glacier Area [km2]:', np.round(main_glac_rgi.Area.sum(),1), '(' + 
+               str(np.round(main_glac_rgi.Area.sum() / 51591.6 * 100,1)) + '%)')
+    
+    if option_andes == 1:
+        ds_fp = input.main_directory + '/../DEMs/Berthier/'
+        ds_fn = 'MB_all_glaciers_Andes_rgi60_2000.0-2018.3.csv'
+        
+        ds = pd.read_csv(ds_fp + ds_fn)
+        ds = ds.sort_values('RGIId', ascending=True)
+        # remove nan values
+        ds = (ds.drop(np.where(np.isnan(ds['MB [m w.e a-1]'].values) == True)[0].tolist(), axis=0))   
+        ds.reset_index(drop=True, inplace=True)
+        ds['RegO1'] = [int(x.split('-')[1].split('.')[0]) for x in ds.RGIId.values]
+        ds['glacno'] = [x.split('-')[1] for x in ds.RGIId.values]
+        
+        main_glac_rgi = load_glacierdata_byglacno(ds.glacno.values, option_loadhyps_climate=0, option_loadcal_data=0)
+        
+        # Count how many in region
+        ds_r16 = ds.loc[np.where(ds.RegO1 == 16)[0]]
+        main_glac_rgi16 = main_glac_rgi.loc[np.where(main_glac_rgi.O1Region == 16)[0]]
+        print('Region 16:')
+        print('Count: 2891 glaciers in South America; others in Region 16 in Mexico, Africa, and Papau New Guinea')
+        print('Count:', ds_r16.shape[0], '(' + str(np.round(ds_r16.shape[0] / 2891*100, 1)) + '%)')
+        print('Glacier Area [km2]:', np.round(main_glac_rgi16.Area.sum(),1), '(' + 
+               str(np.round(main_glac_rgi16.Area.sum() / 2341 * 100,1)) + '%)')
+        
+        ds_r17 = ds.loc[np.where(ds.RegO1 == 17)[0]]
+        main_glac_rgi17 = main_glac_rgi.loc[np.where(main_glac_rgi.O1Region == 17)[0]]
+        print('\nRegion 17:')
+        print('Count:', ds_r17.shape[0], '(' + str(np.round(ds_r17.shape[0] / 15908*100, 1)) + '%)')
+        print('Glacier Area [km2]:', np.round(main_glac_rgi17.Area.sum(),1), '(' + 
+               str(np.round(main_glac_rgi17.Area.sum() / 29429 * 100,1)) + '%)')
+
+    
+    
 #%% REMOVE POOR OBSERVATIONS AND FILL MISSING MB DATA WITH REGIONAL MEAN AND STD
 if args.option_mbdata_fillwregional == 1:
     print('Filling in missing data with regional estimates...')
@@ -497,134 +668,136 @@ if args.option_wgms == 1:
 #%% Create netcdf file of lapse rates from temperature pressure level data
 if args.option_createlapserates == 1:
     # Input data
-    gcm_filepath = os.getcwd() + '/../Climate_data/ERA_Interim/HMA_temp_pressurelevel_data/'
-    gcm_filename_prefix = 'HMA_EraInterim_temp_pressurelevels_'
+    gcm_fp = input.era5_fp
+    gcm_fn = input.era5_pressureleveltemp_fn
+        
     tempname = 't'
     levelname = 'level'
-    latname = 'latitude'
-    lonname = 'longitude'
     elev_idx_max = 1
-    elev_idx_min = 10
-    startyear = 1979
-    endyear = 2017
-    output_filepath = '../Output/'
-    output_filename_prefix = 'HMA_Regions13_14_15_ERAInterim_lapserates'
+    elev_idx_min = 19
+    output_fn= 'ERA5_lapserates.nc'
     
-    def lapserates_createnetcdf(gcm_filepath, gcm_filename_prefix, tempname, levelname, latname, lonname, elev_idx_max, 
-                                elev_idx_min, startyear, endyear, output_filepath, output_filename_prefix):
-        """
-        Create netcdf of lapse rate for every latitude and longitude for each month.
-        
-        The lapse rates are computed based on the slope of a linear line of best fit for the temperature pressure level 
-        data.  Prior to running this function, you must explore the temperature pressure level data to determine the 
-        elevation range indices for a given region, variable names, etc.
+    # Open dataset
+    ds = xr.open_dataset(gcm_fp + gcm_fn)    
+    # extract the pressure levels [Pa]
+    if ds[levelname].attrs['units'] == 'millibars':
+        # convert pressure levels from millibars to Pa
+        levels = ds[levelname].values * 100
+    # Compute the elevation [m a.s.l] of the pressure levels using the barometric pressure formula (pressure in Pa)
+    elev = -input.R_gas*input.temp_std/(input.gravity*input.molarmass_air)*np.log(levels/input.pressure_std)
 
-        Parameters
-        ----------
-        gcm_filepath : str
-            filepath where climate data is located
-        gcm_filename_prefix : str
-            prefix of filename
-        tempname : str
-            temperature variable name
-        levelname : str
-            pressure level variable name
-        latname : str
-            latitude variable name
-        lonname : str
-            longitude variable name
-        elev_idx_max : int
-            index of the maximum pressure level being used
-        elev_idx_min : int
-            index of the minimum pressure level being used
-        startyear : int
-            starting year
-        endyear : int
-            ending year
-        output_filepath : str
-            filepath where output is to be exported
-        output_filename_prefix : str
-            filename prefix of the output
+    # Calculate lapse rates by year
+    lr = np.zeros((ds.time.shape[0], ds.latitude.shape[0], ds.longitude.shape[0]))
+    for ntime, t in enumerate(ds.time.values):        
+        print('time:', ntime, t)
         
-        Returns
-        -------
-        exports netcdf of lapse rates
-        """
-        fullfilename = gcm_filepath + gcm_filename_prefix + str(startyear) + '.nc'
-        data = xr.open_dataset(fullfilename)    
-        # Extract the pressure levels [Pa]
-        if data[levelname].attrs['units'] == 'millibars':
-            # Convert pressure levels from millibars to Pa
-            levels = data[levelname].values * 100
-        # Compute the elevation [m a.s.l] of the pressure levels using the barometric pressure formula (pressure in Pa)
-        elev = -input.R_gas*input.temp_std/(input.gravity*input.molarmass_air)*np.log(levels/input.pressure_std)
-        # Netcdf file for lapse rates ('w' will overwrite existing file)
-        output_fullfilename = (output_filepath + output_filename_prefix + '_' + str(startyear) + '_' + str(endyear) + 
-                               '.nc')
-        netcdf_output = nc.Dataset(output_fullfilename, 'w', format='NETCDF4')
-        # Global attributes
-        netcdf_output.description = ('Lapse rates from ERA Interim pressure level data that span the regions elevation'
-                                     + 'range')
-        netcdf_output.history = 'Created ' + str(strftime("%Y-%m-%d %H:%M:%S"))
-        netcdf_output.source = 'ERA Interim reanalysis data downloaded February 2018'
-        # Dimensions
-        latitude = netcdf_output.createDimension('latitude', data['latitude'].values.shape[0])
-        longitude = netcdf_output.createDimension('longitude', data['longitude'].values.shape[0])
-        time = netcdf_output.createDimension('time', None)
-        # Create dates in proper format for time dimension
-        startdate = str(startyear) + '-01-01'
-        enddate = str(endyear) + '-12-31'
-        startdate = datetime(*[int(item) for item in startdate.split('-')])
-        enddate = datetime(*[int(item) for item in enddate.split('-')])
-        startdate = startdate.strftime('%Y-%m')
-        enddate = enddate.strftime('%Y-%m')
-        dates = pd.DataFrame({'date' : pd.date_range(startdate, enddate, freq='MS')})
-        dates = dates['date'].astype(datetime)
-        # Variables associated with dimensions 
-        latitude = netcdf_output.createVariable('latitude', np.float32, ('latitude',))
-        latitude.long_name = 'latitude'
-        latitude.units = 'degrees_north'
-        latitude[:] = data['latitude'].values
-        longitude = netcdf_output.createVariable('longitude', np.float32, ('longitude',))
-        longitude.long_name = 'longitude'
-        longitude.units = 'degrees_east'
-        longitude[:] = data['longitude'].values
-        time = netcdf_output.createVariable('time', np.float64, ('time',))
-        time.long_name = "time"
-        time.units = "hours since 1900-01-01 00:00:00"
-        time.calendar = "gregorian"
-        time[:] = nc.date2num(dates, units=time.units, calendar=time.calendar)
-        lapserate = netcdf_output.createVariable('lapserate', np.float64, ('time', 'latitude', 'longitude'))
-        lapserate.long_name = "lapse rate"
-        lapserate.units = "degC m-1"
-        # Set count to keep track of time position
-        count = 0
-        for year in range(startyear,endyear+1):
-            print(year)
-            fullfilename_year = gcm_filepath + gcm_filename_prefix + str(year) + '.nc'
-            data_year = xr.open_dataset(fullfilename_year)
-            count = count + 1
-            for lat in range(0,latitude[:].shape[0]):
-                for lon in range(0,longitude[:].shape[0]):
-                    data_subset = data_year[tempname].isel(level=range(elev_idx_max,elev_idx_min+1), 
-                                                           latitude=lat, longitude=lon).values
-                    lapserate_subset = (((elev[elev_idx_max:elev_idx_min+1] * data_subset).mean(axis=1) - 
-                                         elev[elev_idx_max:elev_idx_min+1].mean() * data_subset.mean(axis=1)) / 
-                                        ((elev[elev_idx_max:elev_idx_min+1]**2).mean() - 
-                                         (elev[elev_idx_max:elev_idx_min+1].mean())**2))
-                    lapserate[12*(count-1):12*count,lat,lon] = lapserate_subset
-                    # Takes roughly 4 minutes per year to compute the lapse rate for each lat/lon combo in HMA
-        netcdf_output.close()
-        
-        # Application of the lapserate_createnetcdf function
-    print('Creating lapse rates...')
-    lapserates_createnetcdf(gcm_filepath, gcm_filename_prefix, tempname, levelname, latname, lonname, elev_idx_max, 
-                            elev_idx_min, startyear, endyear, output_filepath, output_filename_prefix)
+        ds_subset = ds[tempname][ntime, elev_idx_max:elev_idx_min+1, :, :].values
+        ds_subset_reshape = ds_subset.reshape(ds_subset.shape[0],-1)
+        lr[ntime,:,:] = (np.polyfit(elev[elev_idx_max:elev_idx_min+1], ds_subset_reshape, deg=1)[0]
+                         .reshape(ds_subset.shape[1:]))
 
+    # Export lapse rates with attibutes
+    output_ds = ds.copy()
+    output_ds = output_ds.drop('t')
+    levels_str = (str(ds['level'][elev_idx_max].values) + ' to ' + str(ds['level'][elev_idx_min].values))
+    output_ds['lapserate'] = (('time', 'latitude', 'longitude'), lr, 
+                              {'long_name': 'lapse rate', 
+                               'units': 'degC m-1',
+                               'levels': levels_str})
+    encoding = {'lapserate':{'_FillValue': False}}
+    
+    output_ds.to_netcdf(gcm_fp + output_fn, encoding=encoding)
+   
+     
+#%%
+if args.option_createtempstd == 1:
+    ds_fp = '/Volumes/LaCie/ERA5/'
+#    ds_fn = 't2m_hourly_1979_1989.nc'
+#    ds_fn = 't2m_hourly_1990_1999.nc'
+#    ds_fn = 't2m_hourly_2000_2009.nc'
+#    ds_fn = 't2m_hourly_2010_2019.nc'
+    ds_all_fn = 'ERA5_tempstd_monthly.nc'
+    option_merge_files = 1
+    
+    # Merge completed files together
+    if option_merge_files == 1:
+        
+        #%%
+        tempstd_fns = []
+        for i in os.listdir(ds_fp):
+            if i.startswith('ERA5_tempstd_monthly') and i.endswith('.nc'):
+                tempstd_fns.append(i)
+        tempstd_fns = sorted(tempstd_fns)
+
+        # Open datasets and combine
+        for nfile, tempstd_fn in enumerate(tempstd_fns):
+            print(tempstd_fn)
+            ds = xr.open_dataset(ds_fp + tempstd_fn)
+            # Merge datasets of stats into one output
+            if nfile == 0:
+                ds_all = ds
+            else:
+                ds_all = xr.concat([ds_all, ds], dim='time')
+            
+        # Export to netcdf
+        encoding = {'t2m_std':{'_FillValue': False}}
+        ds_all.to_netcdf(ds_fp + ds_all_fn, encoding=encoding)
+        
+    else:
+    
+        output_fn= 'ERA5_tempstd_monthly_' + ds_fn.split('_')[2] + '_' + ds_fn.split('_')[3]
+        
+        ds = xr.open_dataset(ds_fp + ds_fn)
+    
+    #    ds_subset = ds.t2m[0:30*24,:,:].values
+    #    t2m_daily = np.moveaxis(np.moveaxis(ds_subset, 0, -1).reshape(-1,24).mean(axis=1)
+    #                            .reshape(ds_subset.shape[1],ds_subset.shape[2],int(ds_subset.shape[0]/24)), -1, 0)
+        
+        # Calculate daily mean temperature
+        ndays = int(ds.time.shape[0] / 24)
+        t2m_daily = np.zeros((ndays, ds.latitude.shape[0], ds.longitude.shape[0]))
+        for nday in np.arange(ndays):
+            if nday%50 == 0:
+                print(str(nday) + ' out of ' + str(ndays))
+            ds_subset = ds.t2m[nday*24:(nday+1)*24, :, :].values
+            t2m_daily[nday,:,:] = (
+                    np.moveaxis(np.moveaxis(ds_subset, 0, -1).reshape(-1,24).mean(axis=1)
+                                .reshape(ds_subset.shape[1],ds_subset.shape[2],int(ds_subset.shape[0]/24)), -1, 0))
+    
+        # Calculate monthly temperature standard deviation
+        date = ds.time[::24].values
+        date_month = [pd.Timestamp(date[x]).month for x in np.arange(date.shape[0])]
+        date_year = [pd.Timestamp(date[x]).year for x in np.arange(date.shape[0])]
+        
+        date_yyyymm = [str(date_year[x]) + '-' + str(date_month[x]).zfill(2) for x in np.arange(date.shape[0])]
+        date_yyyymm_unique = sorted(list(set(date_yyyymm)))
+        
+        t2m_monthly_std = np.zeros((len(date_yyyymm_unique), ds.latitude.shape[0], ds.longitude.shape[0]))
+        date_monthly = []
+        for count, yyyymm in enumerate(date_yyyymm_unique):
+            if count%12 == 0:
+                print(yyyymm)
+            date_idx = np.where(np.array(date_yyyymm) == yyyymm)[0]
+            date_monthly.append(date[date_idx[0]])
+            t2m_monthly_std[count,:,:] = t2m_daily[date_idx,:,:].std(axis=0)
+    
+        # Export lapse rates with attibutes
+        output_ds = ds.copy()
+        output_ds = output_ds.drop('t2m')
+        output_ds = output_ds.drop('time')
+        output_ds['time'] = date_monthly
+        output_ds['t2m_std'] = (('time', 'latitude', 'longitude'), t2m_monthly_std, 
+                                 {'long_name': 'monthly 2m temperature standard deviation', 
+                                  'units': 'K'})
+        encoding = {'t2m_std':{'_FillValue': False}}
+        output_ds.to_netcdf(ds_fp + output_fn, encoding=encoding)
+    
+        # Close dataset
+        ds.close()
+    
 
 #%%
 if args.option_frontalablation_cal == 1:
-    #%%
     region = [1]
     calving_data = pd.read_csv(input.mcnabb_fp + '../alaska_gate_widths_flux.csv')
     
@@ -642,14 +815,14 @@ if args.option_frontalablation_cal == 1:
     main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=region, rgi_regionsO2 = 'all',
                                                       rgi_glac_number=rgi_glac_number)
     # Glacier hypsometry [km**2], total area
-    main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, region, input.hyps_filepath,
+    main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, input.hyps_filepath,
                                                  input.hyps_filedict, input.hyps_colsdrop)
     # Ice thickness [m], average
-    main_glac_icethickness = modelsetup.import_Husstable(main_glac_rgi, region, input.thickness_filepath, 
+    main_glac_icethickness = modelsetup.import_Husstable(main_glac_rgi, input.thickness_filepath, 
                                                          input.thickness_filedict, input.thickness_colsdrop)
     main_glac_hyps[main_glac_icethickness == 0] = 0
     # Width [km], average
-    main_glac_width = modelsetup.import_Husstable(main_glac_rgi, region, input.width_filepath,
+    main_glac_width = modelsetup.import_Husstable(main_glac_rgi, input.width_filepath,
                                                   input.width_filedict, input.width_colsdrop)
     # Elevation bins
     elev_bins = main_glac_hyps.columns.values.astype(int)   
@@ -662,6 +835,12 @@ if args.option_frontalablation_cal == 1:
     gcm_temp, gcm_dates = gcm.importGCMvarnearestneighbor_xarray(gcm.temp_fn, gcm.temp_vn, main_glac_rgi, dates_table)
     gcm_prec, gcm_dates = gcm.importGCMvarnearestneighbor_xarray(gcm.prec_fn, gcm.prec_vn, main_glac_rgi, dates_table)
     gcm_elev = gcm.importGCMfxnearestneighbor_xarray(gcm.elev_fn, gcm.elev_vn, main_glac_rgi)
+    # Air temperature standard deviation
+    if input.option_ablation != 2:
+        gcm_tempstd = np.zeros(gcm_temp.shape)
+    elif input.ref_gcm_name in ['ERA5']:
+        gcm_tempstd, gcm_dates = gcm.importGCMvarnearestneighbor_xarray(gcm.tempstd_fn, gcm.tempstd_vn, 
+                                                                        main_glac_rgi, dates_table)
     # Lapse rate [K m-1]
     gcm_lr, gcm_dates = gcm.importGCMvarnearestneighbor_xarray(gcm.lr_fn, gcm.lr_vn, main_glac_rgi, dates_table)
     #%%
@@ -679,6 +858,7 @@ if args.option_frontalablation_cal == 1:
         # Select subsets of data
         glacier_gcm_elev = gcm_elev[n]
         glacier_gcm_temp = gcm_temp[n,:]
+        glacier_gcm_tempstd = gcm_tempstd[n,:]
         glacier_gcm_lrgcm = gcm_lr[n,:]
         glacier_gcm_lrglac = glacier_gcm_lrgcm.copy()
         glacier_gcm_prec = gcm_prec[n,:]
@@ -698,11 +878,17 @@ if args.option_frontalablation_cal == 1:
          glac_wide_area_annual, glac_wide_volume_annual, glac_wide_ELA_annual, offglac_wide_prec, 
          offglac_wide_refreeze, offglac_wide_melt, offglac_wide_snowpack, offglac_wide_runoff) = (
             massbalance.runmassbalance(modelparameters, glacier_rgi_table, glacier_area_t0, 
-                                       icethickness_t0, width_t0, elev_bins, glacier_gcm_temp, glacier_gcm_prec,
-                                       glacier_gcm_elev, glacier_gcm_lrgcm, glacier_gcm_lrglac, dates_table,
-                                       option_areaconstant=0, frontalablation_k=None,
+                                       icethickness_t0, width_t0, elev_bins, glacier_gcm_temp, glacier_gcm_tempstd, 
+                                       glacier_gcm_prec, glacier_gcm_elev, glacier_gcm_lrgcm, glacier_gcm_lrglac, 
+                                       dates_table, option_areaconstant=0, frontalablation_k=None,
                                        debug=True))
-        print('Add objective function and code )
+        print('Add objective function and code ')
+    
+#%%    
+if args.option_farinotti2019_input == 1:
+    print("\nProcess the ice thickness and surface elevation data from Farinotti (2019) to produce area," + 
+          "ice thickness, width, and length for each elevation bin\n")
+    
 
 #%% Write csv file from model results
 # Create csv such that not importing the air temperature each time (takes 90 seconds for 13,119 glaciers)

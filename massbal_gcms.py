@@ -119,7 +119,7 @@ for j in range(len(rcp_list)):
                        handletextpad=0.25, borderpad=0, frameon=False)
 
 # Y-label
-ax[0,0].set_ylabel('Specific Mass Balance [m w.e. yr^-1]', size=16, fontweight='bold')
+ax[0,0].set_ylabel('Specific Mass Balance [m w.e. yr$^{-1}$]', size=16, fontweight='bold')
 #ax[0,0].yaxis.set_major_locator(plt.MultipleLocator(0.2))x
 #ax[0,0].yaxis.set_minor_locator(plt.MultipleLocator(0.05))
 

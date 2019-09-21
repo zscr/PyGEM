@@ -30,15 +30,15 @@ rcp_list = ['rcp26', 'rcp45', 'rcp85']
 RCP_list = ['RCP 2.6', 'RCP 4.5', 'RCP 8.5']
 
 fig, ax = plt.subplots(2, 3, squeeze=False, sharex='col', sharey='row', 
-             gridspec_kw = {'wspace':0.1, 'hspace':0.05})
+             gridspec_kw = {'wspace':0.1, 'hspace':0.15})
 
 for j in range(len(rcp_list)):
     for i in range(len(gcm_list)):
         gcm = class_climate.GCM(name=gcm_list[i], rcp_scenario=rcp_list[j])
         main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=input.rgi_regionsO1, rgi_regionsO2 = 'all',
-                                                      rgi_glac_number=['14443'])
-        dates_table = modelsetup.datesmodelrun(startyear=1960, endyear=2100, spinupyears=0)
-        time = np.linspace(1960, 2100, 141, dtype=int)
+                                                      rgi_glac_number = 'all')
+        dates_table = modelsetup.datesmodelrun(startyear=2000, endyear=2100, spinupyears=0)
+        time = np.linspace(2000, 2100, 101, dtype=int)
         
         gcm_temp, gcm_dates = gcm.importGCMvarnearestneighbor_xarray(gcm.temp_fn, gcm.temp_vn, main_glac_rgi, dates_table)
         gcm_prec, gcm_dates = gcm.importGCMvarnearestneighbor_xarray(gcm.prec_fn, gcm.prec_vn, main_glac_rgi, dates_table)
@@ -50,29 +50,42 @@ for j in range(len(rcp_list)):
         y_values = gcm_temp_annual[0]
         y2_values = gcm_prec_annual[0]
         
+        ax[0,j].xaxis.set_tick_params(labelsize=20)
+        ax[0,j].xaxis.set_major_locator(plt.MultipleLocator(40))
+        ax[0,j].xaxis.set_minor_locator(plt.MultipleLocator(5))
+        ax[1,j].xaxis.set_tick_params(labelsize=20)
+        ax[1,j].xaxis.set_major_locator(plt.MultipleLocator(40))
+        ax[1,j].xaxis.set_minor_locator(plt.MultipleLocator(5))
+        
         ax[0,j].plot(x_values, y_values, linewidth=1, zorder=2, label=gcm_list[i])
         ax[1,j].plot(x_values, y2_values, linewidth=1, zorder=2, label=gcm_list[i])
-        ax[0,j].xaxis.set_major_locator(plt.MultipleLocator(40))
-        ax[1,j].xaxis.set_major_locator(plt.MultipleLocator(5))
-        ax[0,j].xaxis.set_minor_locator(plt.MultipleLocator(40))
-        ax[1,j].xaxis.set_minor_locator(plt.MultipleLocator(5))
-        ax[0,j].tick_params(axis='both', which='major', labelsize=16, direction='inout')
-        ax[0,j].text(0.5, 0.99, RCP_list[j], size=20, fontweight='extra bold', horizontalalignment='center', verticalalignment='top', 
-                 transform=ax[0,0].transAxes)
+#        ax[0,j].xaxis.set_major_locator(plt.MultipleLocator(40))
+#        ax[1,j].xaxis.set_major_locator(plt.MultipleLocator(40))
+#        ax[0,j].xaxis.set_minor_locator(plt.MultipleLocator(5))
+#        ax[1,j].xaxis.set_minor_locator(plt.MultipleLocator(5))
+#        ax[0,j].tick_params(axis='both', which='major', labelsize=20, direction='inout')
+#        ax[1,j].tick_params(axis='both', which='major', labelsize=20, direction='inout')
+        ax[0,j].text(0.5, 1.02, RCP_list[j], size=20, fontweight='extra bold', horizontalalignment='center', verticalalignment='baseline', 
+                     transform=ax[0,j].transAxes)
+#        ax[0,j].set_xticklabels(['2040','2080'])       
+#        ax[1,j].set_xticklabels(['2040','2080'])       
+
 
     
     ax[0,0].set_ylim(3,14.5)
-    ax[0,0].yaxis.set_major_locator(plt.MultipleLocator(1))
+    ax[0,0].yaxis.set_major_locator(plt.MultipleLocator(2))
     ax[0,0].yaxis.set_minor_locator(plt.MultipleLocator(0.5))
+    ax[0,0].set_ylabel('Temperature [˚C]', size=20, fontweight='bold')
     
     ax[1,0].set_ylim(0,2)
     ax[1,0].yaxis.set_major_locator(plt.MultipleLocator(0.5))
     ax[1,0].yaxis.set_minor_locator(plt.MultipleLocator(0.1))
+    ax[1,0].set_ylabel('Precipitation [m]', size=20, fontweight='bold')
 
-    ax[0,0].text(0.5, 0.99, 'Temperature [˚C]', size=20, fontweight='bold', horizontalalignment='center', verticalalignment='top', 
-             transform=ax[0,0].transAxes)
-    ax[1,0].text(0.5, 0.99, 'Precipitation', size=20, fontweight='bold', horizontalalignment='center', verticalalignment='top', 
-             transform=ax[1,0].transAxes)
+#    ax[0,0].text(0.5, 0.99, 'Temperature [˚C]', size=20, fontweight='bold', horizontalalignment='center', verticalalignment='top', 
+#             transform=ax[0,0].transAxes)
+#    ax[1,0].text(0.5, 0.99, 'Precipitation', size=20, fontweight='bold', horizontalalignment='center', verticalalignment='top', 
+#             transform=ax[1,0].transAxes)
     
 #    ax[1,0].legend(loc=(0.01, 0.5), fontsize=10, labelspacing=0.05, handlelength=1, handletextpad=0.25, borderpad=0, 
 #               frameon=False)
