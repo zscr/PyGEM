@@ -598,8 +598,8 @@ def main(list_packed_vars):
         dates_table_ref = modelsetup.datesmodelrun(startyear=ref_startyear, endyear=ref_endyear,
                                                    spinupyears=input.spinupyears,
                                                    option_wateryear=input.option_wateryear)
-        if debug:
-            print(ref_startyear, ref_endyear)
+#        if debug:
+#            print(ref_startyear, ref_endyear)
 
     # ===== Regular Climate Data (not synthetic simulation) =====
     if input.option_synthetic_sim == 0:
@@ -922,7 +922,12 @@ def main(list_packed_vars):
                     output_offglac_snowpack_monthly[:, n_iter] = offglac_wide_snowpack
                     output_offglac_runoff_monthly[:, n_iter] = offglac_wide_runoff
 
-    #            if debug:
+                if debug:
+                    print('  years:', glac_wide_volume_annual.shape[0]-1)
+                    print('  vol start/end:', np.round(glac_wide_volume_annual[0],2), '/', 
+                          np.round(glac_wide_volume_annual[-1],2))
+                    print('  area start/end:', np.round(glac_wide_area_annual[0],2), '/', 
+                          np.round(glac_wide_area_annual[-1],2))
     #                print('glac runoff max:', np.round(glac_wide_runoff.max(),0),
     #                      'glac prec max:', np.round(glac_wide_prec.max(),2),
     #                      'glac refr max:', np.round(glac_wide_refreeze.max(),2),
@@ -959,6 +964,8 @@ def main(list_packed_vars):
             # Export statistics to netcdf
             if input.output_package == 2:
                 output_sim_fp = input.output_sim_fp + gcm_name + '/'
+                if gcm_name not in ['ERA-Interim', 'ERA5', 'COAWST']:
+                    output_sim_fp += rcp_scenario + '/'
                 # Create filepath if it does not exist
                 if os.path.exists(output_sim_fp) == False:
                     os.makedirs(output_sim_fp)
