@@ -19,10 +19,14 @@ import pygemfxns_modelsetup as modelsetup
 #import pygemfxns_massbalance as massbalance
 #import class_climate
 import class_mbdata
-#%% CHECKING HINDCAST SIM WITH CAL DATA
+from datetime import datetime
+#%% CHECKING HINDCAST SIM WITH CAL DATA ~ 16 sec
 
-# open data -- csv file
+startTime = datetime.now()
+
+# open sim data -- csv file
 ds = xr.open_dataset(os.getcwd() + '/../Output/simulations/merged/ERA5/R1--all--ERA5_c4_ba1_1sets_1980_2018.nc')
+df = pd.DataFrame(ds.glacier_table.values, columns=ds.glac_attrs.values)
 
 # Glacier selection
 rgi_regionsO1 = [1]
@@ -32,8 +36,7 @@ startyear = 1980
 endyear = 2018
 
 # Select glaciers
-main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=rgi_regionsO1, rgi_regionsO2 = 'all', 
-                                                  rgi_glac_number=rgi_glac_number)
+main_glac_rgi = modelsetup.selectglaciersrgitable(rgi_regionsO1=rgi_regionsO1, rgi_regionsO2 = 'all', rgi_glac_number=rgi_glac_number)
 # Glacier hypsometry [km**2], total area
 main_glac_hyps = modelsetup.import_Husstable(main_glac_rgi, input.hyps_filepath, input.hyps_filedict, input.hyps_colsdrop)
 # Determine dates_table_idx that coincides with data  rgi_regionsO1
@@ -46,6 +49,12 @@ elev_bin_interval = elev_bins[1] - elev_bins[0]
 
 cal_data = pd.DataFrame()
 #for dataset in cal_datasets:
+
+print(datetime.now() - startTime)
+
+#%%  ~1 min 49 sec
+startTime = datetime.now()
+
 cal_subset = class_mbdata.MBData(name='braun') #, rgi_region=rgi_regionsO1[0]
 cal_subset_data = cal_subset.retrieve_mb(main_glac_rgi, main_glac_hyps, dates_table)
 cal_data = cal_data.append(cal_subset_data, ignore_index=True)
@@ -53,6 +62,8 @@ cal_data = cal_data.sort_values(['glacno', 't1_idx'])
 cal_data.reset_index(drop=True, inplace=True)
 
 ds2 = cal_data
+#df2 = pd.DataFrame(ds2.glacier_table.values, columns=ds2.glac_attrs.values)
+
 #ds2 = pd.read_csv(os.getcwd() + '/../DEMs/larsen/larsen2015_supplementdata_wRGIIds.csv')
 #ds2 = pd.read_csv(os.getcwd() + '/../DEMs/McNabb_data/wgms_dv/Alaska_dV_17jun_preprocessed.csv')
 larsen_glac = input.get_same_glaciers(os.getcwd() + '/../Output/cal_opt1/reg1')
@@ -60,7 +71,7 @@ larsen_glac = ['RGI60-01.' + x for x in larsen_glac]
 #glac_idxs = ds2.RGIId
 #glac_idxs = glac_idxs.index.tolist(larsen_glac)
 mb_sim = ds.variables['massbaltotal_glac_monthly'].values[:,:,0]
-mb_cal = ds2.mb_mwe
+#mb_cal = ds2.mb_mwe
 num_glac = ds2.shape[0]
 
 # get index of start dates for all glaciers -- t1_idx is a list
@@ -69,21 +80,33 @@ t2_idx = ds2.t2_idx.values.astype(int)
 years = (t2_idx - t1_idx + 1)/12
 sigma = ds2.mb_mwe_err/years
 
-# get yearly mass balance sum from simulation
+
+#%% ~0.2 sec
+
+# get yearly mass balance sum from simulation -- change to processing as matrix not list
 mb_subset_sum = np.empty(num_glac)
 zscore = np.empty(num_glac)
 diff = np.empty(num_glac)
 for i in range(0, num_glac - 1):
-    mb_partial = mb_sim[i, t1_idx[i]:t2_idx[i] + 1]
-    mb_subset_sum[i] = (np.sum(mb_partial)/years[i])
-    mb_cal[i] = mb_cal[i]/years[i]
-#    print(mb_subset_sum[i], mb_cal[i])
-    diff[i] = mb_subset_sum[i] - mb_cal[i]
-    zscore[i] = diff[i]/sigma[i]
+     if i%100==0:
+         print(i)
+     mb_partial = mb_sim[i, t1_idx[i]:t2_idx[i] + 1]
+     mb_subset_sum[i] = (np.sum(mb_partial))
+mb_sim_mwea = mb_subset_sum/years
+#    mb_subset_sum[i] = (np.sum(mb_partial)/years[i])
+mb_cal = ds2.mb_mwe/years
+##    print(mb_subset_sum[i], mb_cal[i])
+diff = mb_sim_mwea - mb_cal
+zscore = diff/sigma
 #    print(larsen_glac[i] + ': ' + str(zscore[i]))
 
 #    print(zscore[i])
-#%% X-Y plot
+
+print(datetime.now() - startTime)
+
+#%% X-Y plot ~0.5 sec
+startTime = datetime.now()
+
 x_values = mb_cal
 y_values = mb_subset_sum
 x2_values = [-6, 1]
@@ -105,6 +128,8 @@ if os.path.exists(figure_fp) == False:
     os.makedirs(figure_fp)
 figure_fn = 'hindcast_check_plot_xy.png'
 fig.savefig(figure_fp + figure_fn, bbox_inches='tight', dpi=300)
+
+print(datetime.now() - startTime)
 
 ##%% HISTOGRAM PLOT
 #diff = mb_subset_sum - mb_cal

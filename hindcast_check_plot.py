@@ -15,7 +15,7 @@ import xarray as xr
 from datetime import datetime
 import time
 #%% X-Y PLOT
-ds = xr.open_dataset(os.getcwd() + '/../Output/simulations/ERA-Interim/R1_ERA-Interim_c1_ba1_1sets_1980_2017.nc')
+ds = xr.open_dataset(os.getcwd() + '/../Output/simulations/merged/ERA5/R1--all--ERA5_c4_ba1_1sets_1980_2018.nc')
 mb = ds.variables['massbaltotal_glac_monthly'].values[:,:,0]
 ds2 = pd.read_csv(os.getcwd() + '/../DEMs/larsen/larsen2015_supplementdata_wRGIIds.csv')
 start_dates = ds2.loc[:,'date0']

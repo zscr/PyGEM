@@ -2427,6 +2427,7 @@ if __name__ == '__main__':
     # Ice thickness [m], average
     main_glac_icethickness_all = modelsetup.import_Husstable(main_glac_rgi_all, input.thickness_filepath, 
                                                              input.thickness_filedict, input.thickness_colsdrop)
+    main_glac_icethickness_all[main_glac_icethickness_all < 0] = 0
     main_glac_hyps_all[main_glac_icethickness_all == 0] = 0
     # Width [km], average
     main_glac_width_all = modelsetup.import_Husstable(main_glac_rgi_all, input.width_filepath,
